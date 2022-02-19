@@ -8,7 +8,6 @@ namespace TestPlugin.Services
     {
         public void Init(IServiceCollection services)
         {
-            throw new NotImplementedException();
         }
     }
 }
