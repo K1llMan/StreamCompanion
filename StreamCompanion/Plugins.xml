@@ -1,7 +1,14 @@
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="Common.xml" />
 
+  <ItemGroup>
+    <ProjectReference Include="..\CompanionPlugin\CompanionPlugin.csproj">
+      <Private>false</Private>
+    </ProjectReference>
+  </ItemGroup>
+
   <PropertyGroup>
-    <OutputPath>$(OutputPath)\plugins</OutputPath>
+    <EnableDynamicLoading>true</EnableDynamicLoading>
+    <OutputPath>$(OutputPath)\plugins\$(MSBuildProjectName)</OutputPath>
   </PropertyGroup>
 </Project>
