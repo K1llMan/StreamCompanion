@@ -1,6 +1,7 @@
 ﻿using System.Reflection;
 
 using CompanionPlugin;
+using CompanionPlugin.Interfaces;
 
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 

@@ -2,7 +2,7 @@
   <Import Project="Common.xml" />
 
   <ItemGroup>
-    <ProjectReference Include="..\CompanionPlugin\CompanionPlugin.csproj">
+    <ProjectReference Include="..\..\CompanionPlugin\CompanionPlugin.csproj">
       <Private>false</Private>
     </ProjectReference>
   </ItemGroup>
