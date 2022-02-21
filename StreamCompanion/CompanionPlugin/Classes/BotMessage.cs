@@ -1,6 +1,4 @@
-﻿using System.Net.WebSockets;
-
-using CompanionPlugin.Enums;
+﻿using CompanionPlugin.Enums;
 
 namespace CompanionPlugin.Classes;
 

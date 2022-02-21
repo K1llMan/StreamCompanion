@@ -1,11 +1,7 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-using CompanionPlugin.Interfaces;
 using CompanionPlugin.Services;
-
-using Microsoft.AspNetCore.Http.Json;
-using Microsoft.AspNetCore.Mvc.Formatters;
 
 using StreamCompanion.Services;
 
