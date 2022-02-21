@@ -3,8 +3,11 @@ using CompanionPlugin.Enums;
 
 namespace CompanionPlugin.Interfaces;
 
-public interface ICommandService
+/// <summary>
+/// Интерфейс сервиса команд
+/// </summary>
+public interface ICommandService: IStreamService
 {
-    BotMessage ProcessCommand(string messsage, UserRole role);
+    BotMessage ProcessCommand(string message, string user, UserRole role);
     void Init();
 }

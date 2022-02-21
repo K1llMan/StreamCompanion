@@ -1,4 +1,7 @@
-﻿using CompanionPlugin.Enums;
+﻿using System.ComponentModel;
+using System.Reflection;
+
+using CompanionPlugin.Enums;
 using CompanionPlugin.Extensions;
 using CompanionPlugin.Interfaces;
 
@@ -8,15 +11,25 @@ public class CommandService : ICommandService
 {
     #region Поля
 
-    private delegate BotMessage MessageHandler(BotMessage message);
-
-    private Dictionary<string, MessageHandler> commands = new ();
+    protected Dictionary<string, CommandInfo> commands = new ();
 
     #endregion Поля
 
+    #region Вспомогательные функции
+
+    private void AddCommand(CommandInfo info)
+    {
+        if (!commands.ContainsKey(info.Command))
+        {
+            commands.Add(info.Command, info);
+        }
+    }
+
+    #endregion Вспомогательные функции
+
     #region Основные функции
 
-    public BotMessage ProcessCommand(string message, UserRole role)
+    public BotMessage ProcessCommand(string message, string user, UserRole role)
     {
         message = message.Trim();
 
@@ -30,10 +43,12 @@ public class CommandService : ICommandService
                     Type = MessageType.NotCommand
                 };
 
-            return new BotMessage {
+            return commands[command].Handler.Invoke(new BotMessage {
+                Command = command,
                 Text = data,
-                Type = MessageType.Success
-            };
+                Role = role,
+                User = user
+            });
         }
 
         return new BotMessage
@@ -42,9 +57,32 @@ public class CommandService : ICommandService
         };
     }
 
-    public void Init()
+    public virtual void Init()
     {
-        throw new NotImplementedException();
+        GetType().GetMethods()
+            .Where(m => m.GetCustomAttribute<BotCommandAttribute>() != null)
+            .ToList()
+            .ForEach(m => {
+                BotCommandAttribute command = m.GetCustomAttribute<BotCommandAttribute>();
+                DescriptionAttribute desc = m.GetCustomAttribute<DescriptionAttribute>();
+
+                if (command != null)
+                    AddCommand(new CommandInfo {
+                        Command = command.Command,
+                        Description = desc?.Description,
+                        Role = command.Role,
+                        Handler = m.CreateDelegate<MessageHandler>(this)
+                    });
+            });
+    }
+
+    public string GetDescription()
+    {
+        DescriptionAttribute desc = GetType().GetCustomAttribute<DescriptionAttribute>();
+
+        return $"Сервис \"{desc?.Description}\"\n" +
+            "\tКоманды:\n" +
+            string.Join("\n", commands.Values.Select(c => $"\t\t\"{c.Command}\": {c.Description}"));
     }
 
     #endregion Основные функции

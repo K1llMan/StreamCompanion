@@ -1,9 +1,11 @@
 ﻿using CompanionPlugin.Enums;
+using CompanionPlugin.Interfaces;
+using CompanionPlugin.Services;
 
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
-using TestPlugin.Service;
+using TestPlugin.Services;
 
 namespace TestPlugin.Controllers
 {
@@ -13,18 +15,19 @@ namespace TestPlugin.Controllers
     {
         #region Поля
 
-        private TestService service;
+        private TestSourceService testSourceService;
         private ILogger log;
 
         #endregion Поля
 
-        public TestPluginController(TestService testService, ILogger<TestPluginController> logger)
+        public TestPluginController(ServiceResolver serviceResolver, ILogger<TestPluginController> logger)
         {
-            service = testService;
+            testSourceService = serviceResolver.Resolve<ICommandSourceService, TestSourceService>();
             log = logger;
         }
 
         [HttpGet("version")]
+        [TypeFilter(typeof(TestService))]
         public object Version()
         {
             return "Plugin Controller v 1.0";
@@ -33,7 +36,7 @@ namespace TestPlugin.Controllers
         [HttpPost("message")]
         public object Message(string message, UserRole role)
         {
-            return service.ProcessCommand(message, role);
+            return testSourceService.AddMessage(message, role);
         }
     }
 }

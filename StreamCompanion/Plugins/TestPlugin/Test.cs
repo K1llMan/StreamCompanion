@@ -2,7 +2,7 @@
 
 using Microsoft.Extensions.DependencyInjection;
 
-using TestPlugin.Service;
+using TestPlugin.Services;
 
 namespace TestPlugin
 {
@@ -26,6 +26,7 @@ namespace TestPlugin
         public void Init(IServiceCollection services)
         {
             services.AddSingleton<ICommandService, TestService>();
+            services.AddSingleton<ICommandSourceService, TestSourceService>();
         }
 
         #endregion ICompanionPlugin
