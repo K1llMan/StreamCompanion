@@ -17,4 +17,15 @@ public class TestService : CommandService
             Type = MessageType.Success
         };
     }
+
+    [BotCommand("!adminTest", UserRole.Administrator)]
+    [Description("Тестовая команда для теста тестов")]
+    public BotMessage AdminTest(BotMessage message)
+    {
+        return new BotMessage
+        {
+            Text = "Привет, братюня-админ",
+            Type = MessageType.Success
+        };
+    }
 }

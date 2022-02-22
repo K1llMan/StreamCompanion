@@ -5,5 +5,5 @@
 /// </summary>
 public interface IStreamService
 {
-    string GetDescription();
+    Dictionary<string, object> GetDescription();
 }

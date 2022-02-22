@@ -17,6 +17,11 @@ public static class Program
         });
     }
 
+    private static void InitConfiguration(ConfigurationManager configuration)
+    {
+        configuration.AddJsonFile("settings.json", false, true);
+    }
+
     private static WebApplication BuildApp(WebApplicationBuilder builder)
     {
         builder.Services.AddControllers()
@@ -33,6 +38,7 @@ public static class Program
         });
 
         ConfigureLogging(builder);
+        InitConfiguration(builder.Configuration);
 
         // Добавление сервисов
         StreamCompanionService companionService = new(builder.Services);

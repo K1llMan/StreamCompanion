@@ -104,13 +104,12 @@ public class StreamCompanionService
         CommandServices.ForEach(s => s.Init());
     }
 
-    public string GetDescription()
+    public Dictionary<string, object> GetDescription()
     {
-        return "Сервисы-источники для команд:\n" +
-            string.Join("\n", CommandSourcesServices.Select(s => s.GetDescription())) +
-            "\n\n" +
-            "Сервисы команд:\n" +
-            string.Join("\n", CommandServices.Select(s => s.GetDescription()));
+        return new Dictionary<string, object> {
+            { "sources", CommandSourcesServices.Select(s => s.GetDescription()) },
+            { "commands", CommandServices.Select(s => s.GetDescription()) }
+        };
     }
 
     #endregion Основные функции

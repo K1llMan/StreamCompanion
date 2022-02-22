@@ -16,7 +16,7 @@ namespace StreamCompanion.Controllers
         }
 
         [HttpGet("description")]
-        public string GetDescription()
+        public object GetDescription()
         {
             return service.GetDescription();
         }

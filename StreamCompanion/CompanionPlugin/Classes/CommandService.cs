@@ -38,7 +38,7 @@ public class CommandService : ICommandService
             string command = message.GetMatches(@"^!\w+").FirstOrDefault();
             string data = message.GetMatches(@"(?<=\b[\s]).+").FirstOrDefault();
 
-            if (string.IsNullOrEmpty(command?.TrimStart('!')) || !commands.ContainsKey(command))
+            if (string.IsNullOrEmpty(command?.TrimStart('!')) || !commands.ContainsKey(command) || commands[command].Role < role)
                 return new BotMessage {
                     Type = MessageType.NotCommand
                 };
@@ -76,13 +76,20 @@ public class CommandService : ICommandService
             });
     }
 
-    public string GetDescription()
+    public Dictionary<string, object> GetDescription()
     {
         DescriptionAttribute desc = GetType().GetCustomAttribute<DescriptionAttribute>();
 
-        return $"Сервис \"{desc?.Description}\"\n" +
-            "\tКоманды:\n" +
-            string.Join("\n", commands.Values.Select(c => $"\t\t\"{c.Command}\": {c.Description}"));
+        return new Dictionary<string, object>
+        {
+            { "name", desc?.Description ?? string.Empty },
+            { "commands", commands.Values.Select(c => new Dictionary<string, object> {
+                    { "command", c.Command },
+                    { "description", c.Description },
+                    { "role", c.Role },
+                })
+            }
+        };
     }
 
     #endregion Основные функции

@@ -24,11 +24,14 @@ public class CommandSourceService: ICommandSourceService
 
     public event CommandReceivedEventEventHandler? CommandReceivedEvent;
 
-    public string GetDescription()
+    public Dictionary<string, object> GetDescription()
     {
         DescriptionAttribute desc = GetType().GetCustomAttribute<DescriptionAttribute>();
 
-        return $"Сервис \"{desc?.Description}\"";
+        return new Dictionary<string, object>
+        {
+            { "name", desc?.Description ?? string.Empty }
+        };
     }
 
     #endregion ICommandSourceService
