@@ -6,5 +6,6 @@ public class HomunculusServiceConfig : IServiceSettings
 {
     public bool Enabled { get; set; }
     public string AudioPath { get; set; }
+    public SpeechSettings Speech { get; set; }
     public List<VoiceCommand> Commands { get; set; }
 }

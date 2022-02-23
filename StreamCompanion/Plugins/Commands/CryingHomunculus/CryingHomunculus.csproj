@@ -15,4 +15,12 @@
   <ItemGroup>
     <PackageReference Include="NAudio" Version="2.0.1" />
   </ItemGroup>
+
+  <ItemGroup>
+    <ExternalData Include="External\**" />
+  </ItemGroup>
+
+  <Target Name="CopyFiles" AfterTargets="AfterBuild">
+    <Copy SourceFiles="@(ExternalData)" DestinationFolder="$(OutputPath)\..\..\external\%(RecursiveDir)" />
+  </Target>
 </Project>
