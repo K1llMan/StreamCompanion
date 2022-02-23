@@ -2,30 +2,49 @@
 
 using CompanionPlugin.Classes;
 using CompanionPlugin.Enums;
+using CompanionPlugin.Interfaces;
+
+using TestPlugin.Classes;
 
 namespace TestPlugin.Services;
 
 [Description("Тестовый сервис команд")]
-public class TestService : CommandService
+public class TestService : CommandService<TestServiceConfig>
 {
     [BotCommand("!test", UserRole.User)]
     [Description("Тестовая команда для теста тестов")]
     public BotMessage Test(BotMessage message)
     {
         return new BotMessage {
-            Text = message.Text,
+            Text = $"Ты кто такой? Шо ты мне пришешь \"{message.Text}\"?! Нахуй пшёл!",
             Type = MessageType.Success
         };
     }
 
     [BotCommand("!adminTest", UserRole.Administrator)]
-    [Description("Тестовая команда для теста тестов")]
+    [Description("Тест команды администратора")]
     public BotMessage AdminTest(BotMessage message)
     {
         return new BotMessage
         {
-            Text = "Привет, братюня-админ",
+            Text = $"Привет, братюня-админ {message.User}!",
             Type = MessageType.Success
         };
+    }
+
+    [BotCommand("!modTest", UserRole.Moderator)]
+    [Description("Тест команды модератора")]
+    public BotMessage ModeratorTest(BotMessage message)
+    {
+        return new BotMessage
+        {
+            Text = $"Привет, братюня-модератор {message.User}!",
+            Type = MessageType.Success
+        };
+    }
+
+    public TestService(IWritableOptions<TestServiceConfig> serviceConfig)
+    {
+        config = serviceConfig;
     }
 }

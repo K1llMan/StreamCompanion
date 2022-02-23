@@ -14,12 +14,13 @@ public static class Program
         builder.Host.ConfigureLogging(logging => {
             logging.ClearProviders();
             logging.AddConsole();
+            logging.SetMinimumLevel(LogLevel.Trace);
         });
     }
 
     private static void InitConfiguration(ConfigurationManager configuration)
     {
-        configuration.AddJsonFile("settings.json", false, true);
+        //configuration.AddJsonFile("settings.json", false, true);
     }
 
     private static WebApplication BuildApp(WebApplicationBuilder builder)
@@ -27,6 +28,7 @@ public static class Program
         builder.Services.AddControllers()
             .AddJsonOptions(options => {
                 options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+                options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
             });
 
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -41,13 +43,15 @@ public static class Program
         InitConfiguration(builder.Configuration);
 
         // Добавление сервисов
-        StreamCompanionService companionService = new(builder.Services);
+        StreamCompanionService companionService = new(builder.Services, builder.Configuration);
         builder.Services.AddSingleton(companionService);
 
         WebApplication app = builder.Build();
 
         // Инициализация основного сервиса
         companionService.Init(app.Services.GetService<ServiceResolver>());
+
+        app.Logger.LogInformation("Initialized");
 
         return app;
     }

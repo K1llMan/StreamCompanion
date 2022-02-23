@@ -4,18 +4,18 @@ using CompanionPlugin.Interfaces;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-using TestPlugin.Classes;
-using TestPlugin.Services;
+using TwitchPlugin.Classes;
+using TwitchPlugin.Services;
 
-namespace TestPlugin;
+namespace TwitchPlugin;
 
-public class Test : ICompanionPlugin
+public class Twitch : ICompanionPlugin
 {
     #region Основные функции
 
-    public Test()
+    public Twitch()
     {
-        Name = "Test Plugin";
+        Name = "Twitch Plugin";
         Version = new Version(1, 0, 0, 0);
     }
 
@@ -28,9 +28,8 @@ public class Test : ICompanionPlugin
 
     public void Init(IServiceCollection services, ConfigurationManager configuration)
     {
-        services.ConfigureWritable<TestServiceConfig>("test.json");
-        services.AddSingleton<ICommandService, TestService>();
-        services.AddSingleton<ICommandSourceService, TestSourceService>();
+        services.ConfigureWritable<TwitchSourceServiceConfig>("twitch.json");
+        services.AddSingleton<ICommandSourceService, TwitchSourceService>();
     }
 
     #endregion ICompanionPlugin

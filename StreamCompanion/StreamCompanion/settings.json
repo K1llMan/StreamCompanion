@@ -1,0 +1,6 @@
+{
+  "plugins": {
+    "pluginPath": "plugins",
+    "pluginConfigPath": "pluginConfigs" 
+  } 
+}

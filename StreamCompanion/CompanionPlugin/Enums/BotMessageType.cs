@@ -1,9 +1,8 @@
-﻿namespace CompanionPlugin.Enums
+﻿namespace CompanionPlugin.Enums;
+
+public enum MessageType
 {
-    public enum MessageType
-    {
-        NotCommand,
-        Success,
-        Error
-    }
+    NotCommand,
+    Success,
+    Error
 }

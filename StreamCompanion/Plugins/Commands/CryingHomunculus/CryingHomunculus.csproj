@@ -2,20 +2,17 @@
 
   <PropertyGroup>
     <TargetFramework>net6.0-windows</TargetFramework>
-    <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
-  <Import Project="$(SolutionDir)\Common.xml" />
+  <Import Project="$(SolutionDir)\Plugins.xml" />
 
   <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Extensions\" />
-    <Folder Include="Services\" />
+    <PackageReference Include="NAudio" Version="2.0.1" />
   </ItemGroup>
-
 </Project>

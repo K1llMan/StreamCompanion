@@ -34,5 +34,10 @@ public class CommandSourceService: ICommandSourceService
         };
     }
 
+    public virtual void Init()
+    {
+
+    }
+
     #endregion ICommandSourceService
 }

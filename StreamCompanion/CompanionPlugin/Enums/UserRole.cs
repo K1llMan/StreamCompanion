@@ -1,9 +1,8 @@
-﻿namespace CompanionPlugin.Enums
+﻿namespace CompanionPlugin.Enums;
+
+public enum UserRole
 {
-    public enum UserRole
-    {
-        Administrator,
-        Moderator,
-        User
-    }
+    Administrator,
+    Moderator,
+    User
 }

@@ -9,5 +9,4 @@ namespace CompanionPlugin.Interfaces;
 public interface ICommandService: IStreamService
 {
     BotMessage ProcessCommand(string message, string user, UserRole role);
-    void Init();
 }

@@ -5,5 +5,6 @@
 /// </summary>
 public interface IStreamService
 {
+    virtual void Init() { }
     Dictionary<string, object> GetDescription();
 }

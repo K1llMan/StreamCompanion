@@ -1,21 +1,21 @@
 ﻿using CompanionPlugin.Extensions;
 using CompanionPlugin.Interfaces;
 
+using CryingHomunculus.Classes;
+using CryingHomunculus.Service;
+
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-using TestPlugin.Classes;
-using TestPlugin.Services;
+namespace CryingHomunculus;
 
-namespace TestPlugin;
-
-public class Test : ICompanionPlugin
+public class CryingHomunculusPlugin : ICompanionPlugin
 {
     #region Основные функции
 
-    public Test()
+    public CryingHomunculusPlugin()
     {
-        Name = "Test Plugin";
+        Name = "Crying Homunculus Plugin";
         Version = new Version(1, 0, 0, 0);
     }
 
@@ -28,9 +28,8 @@ public class Test : ICompanionPlugin
 
     public void Init(IServiceCollection services, ConfigurationManager configuration)
     {
-        services.ConfigureWritable<TestServiceConfig>("test.json");
-        services.AddSingleton<ICommandService, TestService>();
-        services.AddSingleton<ICommandSourceService, TestSourceService>();
+        services.ConfigureWritable<HomunculusServiceConfig>("cryingHomunculus.json");
+        services.AddSingleton<ICommandService, HomunculusService>();
     }
 
     #endregion ICompanionPlugin

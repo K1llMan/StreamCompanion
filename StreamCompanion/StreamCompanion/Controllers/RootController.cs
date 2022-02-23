@@ -2,23 +2,22 @@
 
 using StreamCompanion.Services;
 
-namespace StreamCompanion.Controllers
+namespace StreamCompanion.Controllers;
+
+[Route("api")]
+[ApiController]
+public class RootController : ControllerBase
 {
-    [Route("api")]
-    [ApiController]
-    public class RootController : ControllerBase
+    private StreamCompanionService service;
+
+    public RootController(StreamCompanionService streamService)
     {
-        private StreamCompanionService service;
+        service = streamService;
+    }
 
-        public RootController(StreamCompanionService streamService)
-        {
-            service = streamService;
-        }
-
-        [HttpGet("description")]
-        public object GetDescription()
-        {
-            return service.GetDescription();
-        }
+    [HttpGet("description")]
+    public object GetDescription()
+    {
+        return service.GetDescription();
     }
 }

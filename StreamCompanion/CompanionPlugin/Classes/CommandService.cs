@@ -7,10 +7,11 @@ using CompanionPlugin.Interfaces;
 
 namespace CompanionPlugin.Classes;
 
-public class CommandService : ICommandService
+public class CommandService<T> : ICommandService where T : class, IServiceSettings, new()
 {
     #region Поля
 
+    protected IWritableOptions<T> config;
     protected Dictionary<string, CommandInfo> commands = new ();
 
     #endregion Поля
@@ -31,6 +32,17 @@ public class CommandService : ICommandService
 
     public BotMessage ProcessCommand(string message, string user, UserRole role)
     {
+        if (config == null)
+            return new BotMessage
+            {
+                Type = MessageType.NotCommand
+            };
+
+        if (!config.Value.Enabled)
+            return new BotMessage {
+                Type = MessageType.NotCommand
+            };
+
         message = message.Trim();
 
         if (message.StartsWith("!"))
@@ -51,8 +63,7 @@ public class CommandService : ICommandService
             });
         }
 
-        return new BotMessage
-        {
+        return new BotMessage {
             Type = MessageType.NotCommand
         };
     }

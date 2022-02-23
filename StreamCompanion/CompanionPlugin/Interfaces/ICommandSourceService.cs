@@ -17,6 +17,6 @@ public class CommandReceivedArgs
 /// </summary>
 public interface ICommandSourceService : IStreamService
 {
-    public event CommandReceivedEventEventHandler CommandReceivedEvent;
+    event CommandReceivedEventEventHandler CommandReceivedEvent;
 }
 
