@@ -8,7 +8,6 @@ using Microsoft.Extensions.Logging;
 
 using TwitchLib.Api;
 using TwitchLib.Api.Core;
-using TwitchLib.Api.V5.Models.Users;
 using TwitchLib.Client;
 using TwitchLib.Client.Events;
 using TwitchLib.Client.Models;
@@ -20,11 +19,10 @@ using TwitchPlugin.Classes;
 namespace TwitchPlugin.Services;
 
 [Description("Twitch")]
-public class TwitchSourceService: CommandSourceService
+public class TwitchSourceService: CommandSourceService<TwitchSourceServiceConfig>
 {
     #region Поля
 
-    private IWritableOptions<TwitchSourceServiceConfig> config;
     private ILogger<TwitchSourceService> log;
     private TwitchClient client;
 

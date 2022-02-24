@@ -6,8 +6,14 @@ using CompanionPlugin.Interfaces;
 
 namespace CompanionPlugin.Classes;
 
-public class CommandSourceService: ICommandSourceService
+public class CommandSourceService<T> : ICommandSourceService where T : class, IServiceSettings, new ()
 {
+    #region Поля
+
+    protected IWritableOptions<T> config;
+
+    #endregion Поля
+
     #region Вспомогательные функции
 
     protected BotMessage Received(CommandReceivedArgs args)

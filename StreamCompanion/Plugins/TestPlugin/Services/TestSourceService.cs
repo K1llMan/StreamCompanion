@@ -4,10 +4,12 @@ using CompanionPlugin.Classes;
 using CompanionPlugin.Enums;
 using CompanionPlugin.Interfaces;
 
+using TestPlugin.Classes;
+
 namespace TestPlugin.Services;
 
 [Description("Тестовый сервис-источник")]
-public class TestSourceService: CommandSourceService
+public class TestSourceService: CommandSourceService<TestSourceServiceConfig>
 {
     #region Основные функции
 

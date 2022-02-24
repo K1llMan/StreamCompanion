@@ -17,7 +17,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Sources", "Sources", "{AAF1
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TwitchPlugin", "Plugins\Sources\TwitchPlugin\TwitchPlugin.csproj", "{A62C16FD-5A87-4569-8967-453CED77D8AE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CryingHomunculus", "Plugins\Commands\CryingHomunculus\CryingHomunculus.csproj", "{F9ED239D-F4AC-4170-9543-D5275F767AEB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CryingHomunculus", "Plugins\Commands\CryingHomunculus\CryingHomunculus.csproj", "{F9ED239D-F4AC-4170-9543-D5275F767AEB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DonationAlertsPlugin", "Plugins\Sources\DonationAlertsPlugin\DonationAlertsPlugin.csproj", "{B769330B-31BA-4500-811D-E7C4E274A37E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +47,10 @@ Global
 		{F9ED239D-F4AC-4170-9543-D5275F767AEB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F9ED239D-F4AC-4170-9543-D5275F767AEB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F9ED239D-F4AC-4170-9543-D5275F767AEB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B769330B-31BA-4500-811D-E7C4E274A37E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B769330B-31BA-4500-811D-E7C4E274A37E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B769330B-31BA-4500-811D-E7C4E274A37E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B769330B-31BA-4500-811D-E7C4E274A37E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -55,6 +61,7 @@ Global
 		{AAF187BF-45E7-4ACB-9AC3-6BA428E13546} = {70C2E05C-DDCF-4F51-A86E-C8E8F49DADA1}
 		{A62C16FD-5A87-4569-8967-453CED77D8AE} = {AAF187BF-45E7-4ACB-9AC3-6BA428E13546}
 		{F9ED239D-F4AC-4170-9543-D5275F767AEB} = {B8FBF82E-9B38-4DDE-BDDB-EF10A71D2C3D}
+		{B769330B-31BA-4500-811D-E7C4E274A37E} = {AAF187BF-45E7-4ACB-9AC3-6BA428E13546}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {71D72C3A-5756-457D-8BE5-6F5301E58440}
