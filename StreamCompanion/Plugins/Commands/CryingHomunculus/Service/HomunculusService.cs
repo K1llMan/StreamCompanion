@@ -21,6 +21,9 @@ public class HomunculusService : CommandService<HomunculusServiceConfig>
     private string audioPath;
     private string speechPath;
     private string speechCachePath;
+
+    private DateTime nextTime = DateTime.Now;
+
     private ILogger<HomunculusService> log;
 
     #endregion Поля
@@ -28,13 +31,22 @@ public class HomunculusService : CommandService<HomunculusServiceConfig>
     #region Команды
 
     [BotCommand("!озвучить", UserRole.Moderator)]
-    [Description("Озвучить текст из команды")]
+    [Description("Озвучить текст из команды. Голоса можно найти на https://rhvoice.su/voices/")]
     public BotMessage SayText(BotMessage message)
     {
+        if (string.IsNullOrEmpty(message.Text))
+            return new BotMessage {
+                Type = MessageType.Error
+            };
+
+        if (!IsReadyToPlay())
+            return new BotMessage {
+                Type = MessageType.Error
+            };
+
         PlaySound(TextToSpeech(message.Text));
 
-        return new BotMessage
-        {
+        return new BotMessage {
             Type = MessageType.Success
         };
     }
@@ -43,11 +55,19 @@ public class HomunculusService : CommandService<HomunculusServiceConfig>
 
     #region Вспомогательные функции
 
-    private string GetCorrectPaths(string path)
+    #region Text-To-Speech
+
+    private string GetSpeechParams(string text, string path)
     {
-        return !Directory.Exists(path)
-            ? Path.Combine(AppContext.BaseDirectory, path)
-            : path;
+        List<string> parameters = new() {
+            $"-t \"{text}\"",
+            $"-w \"{path}\"",
+        };
+
+        if (!string.IsNullOrEmpty(config.Value.Speech.Voice))
+            parameters.Add($"-n \"{config.Value.Speech.Voice}\"");
+
+        return string.Join(" ", parameters);
     }
 
     private string TextToSpeech(string text)
@@ -59,8 +79,9 @@ public class HomunculusService : CommandService<HomunculusServiceConfig>
         string path = Path.Combine(speechCachePath, $"{fileName}.wav");
 
         Process process = new() {
-            StartInfo = new ProcessStartInfo(Path.Combine(speechPath, "balcon.exe"),
-                $"-t \"{text}\" -w \"{path}\""
+            StartInfo = new ProcessStartInfo(
+                Path.Combine(speechPath, "balcon.exe"), 
+                GetSpeechParams(text, path)
             )
         };
 
@@ -68,6 +89,15 @@ public class HomunculusService : CommandService<HomunculusServiceConfig>
         process.WaitForExit();
 
         return path;
+    }
+
+    #endregion Text-To-Speech
+
+    private string GetCorrectPaths(string path)
+    {
+        return !Directory.Exists(path)
+            ? Path.Combine(AppContext.BaseDirectory, path)
+            : path;
     }
 
     private void PlaySound(string path)
@@ -82,10 +112,22 @@ public class HomunculusService : CommandService<HomunculusServiceConfig>
         {
             Thread.Sleep(1000);
         }
+
+        nextTime = DateTime.Now.AddMilliseconds(config.Value.Timeout);
+    }
+
+    private bool IsReadyToPlay()
+    {
+        return DateTime.Now > nextTime;
     }
 
     private BotMessage PlayCommand(BotMessage message, string path)
     {
+        if (!IsReadyToPlay())
+            return new BotMessage {
+                Type = MessageType.Error
+            };
+
         path = Path.Combine(audioPath, path);
 
         if (File.Exists(path))
@@ -113,6 +155,12 @@ public class HomunculusService : CommandService<HomunculusServiceConfig>
         audioPath = GetCorrectPaths(config.Value.AudioPath);
         speechPath = GetCorrectPaths(config.Value.Speech.Path);
         speechCachePath = GetCorrectPaths(config.Value.Speech.CachePath);
+
+        // Очистка кэша
+        if (Directory.Exists(speechCachePath) && speechCachePath != AppContext.BaseDirectory)
+            Directory.GetFiles(speechCachePath, "*.*")
+                .ToList()
+                .ForEach(File.Delete);
 
         foreach (VoiceCommand command in config.Value.Commands)
         {

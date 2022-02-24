@@ -142,6 +142,9 @@ public class TwitchSourceService: CommandSourceService
 
     public override void Init()
     {
+        if (string.IsNullOrEmpty(config.Value.Token))
+            return;
+
         ClientConnect();
         APIConnect();
     }
