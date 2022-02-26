@@ -5,9 +5,4 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
-
-  <ItemGroup>
-    <PackageReference Include="TwitchLib.Api.Core.Models" Version="3.3.0" />
-  </ItemGroup>
-
 </Project>

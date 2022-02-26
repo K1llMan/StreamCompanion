@@ -1,4 +1,6 @@
-﻿using System.Text;
+﻿using System.Net.Http.Headers;
+using System.Net.Http.Json;
+using System.Text;
 using System.Text.Json;
 
 namespace DonationAlertsLib.Web.Requests;
@@ -14,12 +16,14 @@ public class BaseApiRequest
 
     #region Вспомогательные функции
 
-    protected List<KeyValuePair<string, string>>? GetDefaultHeaders(string token)
+    protected List<KeyValuePair<string, string>> GetDefaultHeaders(string token = "")
     {
-        return new List<KeyValuePair<string, string>> {
-            new ("Content-Type", "application/json"),
-            new ("Authorization", $"Bearer {token}")
-        };
+        List<KeyValuePair<string, string>> headers = new();
+
+        if (!string.IsNullOrEmpty(token))
+            headers.Add(new("Authorization", $"Bearer {token}"));
+
+        return headers;
     }
 
     #endregion Вспомогательные функции
@@ -39,9 +43,11 @@ public class BaseApiRequest
                 request.Headers.Add(pair.Key, pair.Value);
 
         if (body != null)
-            request.Content = new StringContent(JsonSerializer.Serialize(body, JsonSerializerSettings.GetSettings()), Encoding.UTF8);
+            request.Content = JsonContent.Create(body, new MediaTypeHeaderValue("application/json"), JsonSerializerSettings.GetSettings());
 
-        string response = client.Send(new HttpRequestMessage(method, url))
+        HttpResponseMessage message = client.Send(request);
+
+        string response = message
             .Content
             .ReadAsStringAsync()
             .GetAwaiter()

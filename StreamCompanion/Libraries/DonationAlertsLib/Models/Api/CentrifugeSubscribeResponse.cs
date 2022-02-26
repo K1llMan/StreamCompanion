@@ -1,4 +1,6 @@
-﻿namespace DonationAlertsLib.Models.Api;
+﻿using DonationAlertsLib.Models.Common;
+
+namespace DonationAlertsLib.Models.Api;
 
 public class CentrifugeSubscribeResponse
 {

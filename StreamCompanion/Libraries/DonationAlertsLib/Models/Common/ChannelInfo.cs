@@ -1,4 +1,4 @@
-﻿namespace DonationAlertsLib.Models.Api;
+﻿namespace DonationAlertsLib.Models.Common;
 
 public class ChannelInfo
 {

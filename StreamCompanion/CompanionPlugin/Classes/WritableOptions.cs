@@ -54,7 +54,9 @@ public class WritableOptions<T> : IWritableOptions<T> where T : class, new()
         configuration = new ConfigurationBuilder()
             .AddJsonFile(settingsPath, true, true)
             .Build();
-        
+
+        Update(data => { });
+
         this.options = options;
         this.file = file;
     }

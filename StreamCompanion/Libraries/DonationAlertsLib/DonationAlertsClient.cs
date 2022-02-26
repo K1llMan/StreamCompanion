@@ -1,10 +1,4 @@
-﻿using System.Net.WebSockets;
-using System.Text;
-using System.Text.Json;
-using System.Web;
-
-using DonationAlertsLib.Models;
-using DonationAlertsLib.Models.Sockets;
+﻿using DonationAlertsLib.Models.Api;
 using DonationAlertsLib.Web;
 
 namespace DonationAlertsLib;
@@ -21,33 +15,23 @@ public class DonationAlertsClient
 
     #endregion Поля
 
-
-
-    #region Вспомогательные функции
-
-    private string GetClientUUID()
-    {
-        if (!socketClient.Connected)
-            return string.Empty;
-
-        string socketToken = apiClient.GetOAuth().SocketConnectionToken;
-
-        SocketResponse<ClientUUIDResponse> response = socketClient.SendMessage<TokenRequest, ClientUUIDResponse>(
-            new SocketRequest<TokenRequest> {
-                Id = 1,
-                Params = new TokenRequest {
-                    Token = socketToken
-                }
-            });
-
-        return response.Result.Client;
-    }
-
-    #endregion Вспомогательные функции
-
     #region Основные функции
 
+    public void BeginReceive()
+    {
+        OAuthResponse oauth = apiClient.GetOAuth();
 
+        string clientUuuid = socketClient.GetClientUuid(oauth.SocketConnectionToken);
+
+        CentrifugeSubscribeResponse subs = apiClient.Subscribe(new CentrifugeSubscribeRequestData {
+            Client = clientUuuid,
+            Channels = new[] { $"$alerts:donation_{oauth.Id}" }
+        });
+
+        socketClient.Subscribe(subs.Channels);
+
+        socketClient.BeginReceive();
+    }
 
     public bool Connect()
     {
@@ -57,9 +41,19 @@ public class DonationAlertsClient
         return socketClient.Connect();
     }
 
-    public DonationAlertsClient(string userToken)
+    public void Disconnect()
     {
-        token = userToken;
+        socketClient.Disconnect();
+    }
+
+    public void AddReceiveHandler(RecieveEventHandler handler)
+    {
+        socketClient.OnReceive += handler;
+    }
+
+    public DonationAlertsClient(string apiToken)
+    {
+        token = apiToken;
     }
 
     #endregion Основные функции
