@@ -7,11 +7,10 @@ using CompanionPlugin.Interfaces;
 
 namespace CompanionPlugin.Classes;
 
-public class CommandService<T> : ICommandService where T : class, IServiceSettings, new()
+public class CommandService<T> : StreamService<T>, ICommandService where T : class, IServiceSettings, new()
 {
     #region Поля
 
-    protected IWritableOptions<T> config;
     protected Dictionary<string, CommandInfo> commands = new ();
 
     #endregion Поля
@@ -68,8 +67,10 @@ public class CommandService<T> : ICommandService where T : class, IServiceSettin
         };
     }
 
-    public virtual void Init()
+    public override void Init()
     {
+        commands.Clear();
+
         GetType().GetMethods()
             .Where(m => m.GetCustomAttribute<BotCommandAttribute>() != null)
             .ToList()
@@ -87,20 +88,16 @@ public class CommandService<T> : ICommandService where T : class, IServiceSettin
             });
     }
 
-    public Dictionary<string, object> GetDescription()
+    public override Dictionary<string, object> GetDescription()
     {
-        DescriptionAttribute desc = GetType().GetCustomAttribute<DescriptionAttribute>();
+        Dictionary<string, object> desc = base.GetDescription();
+        desc.Add("commands", commands.Values.Select(c => new Dictionary<string, object> {
+            { "command", c.Command },
+            { "description", c.Description },
+            { "role", c.Role },
+        }));
 
-        return new Dictionary<string, object>
-        {
-            { "name", desc?.Description ?? string.Empty },
-            { "commands", commands.Values.Select(c => new Dictionary<string, object> {
-                    { "command", c.Command },
-                    { "description", c.Description },
-                    { "role", c.Role },
-                })
-            }
-        };
+        return desc;
     }
 
     #endregion Основные функции

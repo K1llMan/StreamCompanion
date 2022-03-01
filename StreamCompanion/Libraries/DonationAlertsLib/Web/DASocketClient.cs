@@ -94,10 +94,6 @@ public class DASocketClient
         return data.ToString();
     }
 
-    #endregion Вспомогательные функции
-
-    #region Вспомогательные функции
-
     /// <summary>
     /// Отправка сообщения
     /// </summary>

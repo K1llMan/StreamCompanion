@@ -32,7 +32,7 @@ public class DonationAlertsSourceService : CommandSourceService<DonationAlertsCo
 
     public DonationAlertsSourceService(IWritableOptions<DonationAlertsConfig> serviceConfig)
     {
-        config = serviceConfig;
+        SetConfig(serviceConfig);
     }
 
     public override void Init()
@@ -47,4 +47,13 @@ public class DonationAlertsSourceService : CommandSourceService<DonationAlertsCo
     }
 
     #endregion Основные функции
+
+    #region IDisposable
+
+    public override void Dispose()
+    {
+        client?.Disconnect();
+    }
+
+    #endregion IDisposable
 }

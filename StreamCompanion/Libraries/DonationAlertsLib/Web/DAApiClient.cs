@@ -7,7 +7,7 @@ public class DAApiClient
 {
     #region Поля
 
-    private string token;
+    private readonly string token;
 
     #endregion Поля
 

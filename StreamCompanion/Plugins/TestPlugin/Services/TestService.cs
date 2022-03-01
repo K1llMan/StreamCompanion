@@ -45,6 +45,6 @@ public class TestService : CommandService<TestServiceConfig>
 
     public TestService(IWritableOptions<TestServiceConfig> serviceConfig)
     {
-        config = serviceConfig;
+        SetConfig(serviceConfig);
     }
 }

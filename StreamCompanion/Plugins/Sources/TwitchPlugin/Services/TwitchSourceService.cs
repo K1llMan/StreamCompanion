@@ -129,8 +129,8 @@ public class TwitchSourceService: CommandSourceService<TwitchSourceServiceConfig
 
     public TwitchSourceService(IWritableOptions<TwitchSourceServiceConfig> serviceConfig, ILogger<TwitchSourceService> logger)
     {
-        config = serviceConfig;
         log = logger;
+        SetConfig(serviceConfig);
     }
 
     public void Send(string message)

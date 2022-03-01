@@ -144,8 +144,9 @@ public class HomunculusService : CommandService<HomunculusServiceConfig>
 
     public HomunculusService(IWritableOptions<HomunculusServiceConfig> serviceConfig, ILogger<HomunculusService> logger)
     {
-        config = serviceConfig;
         log = logger;
+
+        SetConfig(serviceConfig);
     }
 
     public override void Init()
