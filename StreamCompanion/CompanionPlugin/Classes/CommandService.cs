@@ -7,11 +7,11 @@ using CompanionPlugin.Interfaces;
 
 namespace CompanionPlugin.Classes;
 
-public class CommandService<T> : StreamService<T>, ICommandService where T : class, IServiceSettings, new()
+public class CommandService<T> : StreamService<T>, ICommandService where T : class, ICommandServiceSettings, new()
 {
     #region Поля
 
-    protected Dictionary<string, CommandInfo> commands = new ();
+    protected Dictionary<string, CommandInfo> commands = new();
 
     #endregion Поля
 
@@ -25,6 +25,55 @@ public class CommandService<T> : StreamService<T>, ICommandService where T : cla
         }
     }
 
+    private bool IsCorrectCommand(string command, string user, UserRole role)
+    {
+        if (string.IsNullOrEmpty(command?.TrimStart('!')) || !commands.ContainsKey(command))
+            return false;
+
+        List<CommandConstraints> constraints = config.Value.Constraints;
+
+        CommandConstraints constraint = constraints.FirstOrDefault(c => c.Command == command);
+        if (constraint == null)
+            return true;
+
+        if (constraint is not { Enabled: true })
+            return false;
+
+        if (constraint.Roles is { Length: > 0 })
+            if (!constraint.Roles.Contains(role))
+                return false;
+
+        if (constraint.UserNames is { Length: > 0 })
+            if (!constraint.UserNames.Contains(user))
+                return false;
+
+        return true;
+    }
+
+    /// <summary>
+    /// Добавление ограничения на команду, если оно отсутствовало
+    /// </summary>
+    protected void UpdateConstraints()
+    {
+        List<CommandConstraints> constraints = config.Value.Constraints;
+
+        Func<string, bool> hasConstr = c => constraints
+            .Any(con => con.Command == c);
+
+        foreach (string command in commands.Keys)
+        {
+            if (hasConstr(command))
+                continue;
+
+            constraints.Add(new CommandConstraints {
+                Enabled = true,
+                Command = command
+            });
+        }
+
+        config.Update(c => c.Constraints = constraints);
+    }
+
     #endregion Вспомогательные функции
 
     #region Основные функции
@@ -32,8 +81,7 @@ public class CommandService<T> : StreamService<T>, ICommandService where T : cla
     public BotMessage ProcessCommand(string message, string user, UserRole role)
     {
         if (config == null)
-            return new BotMessage
-            {
+            return new BotMessage {
                 Type = MessageType.NotCommand
             };
 
@@ -49,17 +97,18 @@ public class CommandService<T> : StreamService<T>, ICommandService where T : cla
             string command = message.GetMatches(@"^!\w+").FirstOrDefault();
             string data = message.GetMatches(@"(?<=\b[\s]).+").FirstOrDefault();
 
-            if (string.IsNullOrEmpty(command?.TrimStart('!')) || !commands.ContainsKey(command) || commands[command].Role < role)
+            if (!IsCorrectCommand(command, user, role))
                 return new BotMessage {
                     Type = MessageType.NotCommand
                 };
 
-            return commands[command].Handler.Invoke(new BotMessage {
-                Command = command,
-                Text = data,
-                Role = role,
-                User = user
-            });
+            if (command != null)
+                return commands[command].Handler.Invoke(new BotMessage {
+                    Command = command,
+                    Text = data,
+                    Role = role,
+                    User = user
+                });
         }
 
         return new BotMessage {
@@ -82,19 +131,26 @@ public class CommandService<T> : StreamService<T>, ICommandService where T : cla
                     AddCommand(new CommandInfo {
                         Command = command.Command,
                         Description = desc?.Description,
-                        Role = command.Role,
                         Handler = m.CreateDelegate<MessageHandler>(this)
                     });
             });
+
+        UpdateConstraints();
     }
 
     public override Dictionary<string, object> GetDescription()
     {
         Dictionary<string, object> desc = base.GetDescription();
-        desc.Add("commands", commands.Values.Select(c => new Dictionary<string, object> {
-            { "command", c.Command },
-            { "description", c.Description },
-            { "role", c.Role },
+        desc.Add("commands", commands.Values.Select(c =>
+        {
+            CommandConstraints constraint = config.Value.Constraints.FirstOrDefault(con => con.Command == c.Command);
+
+            return new Dictionary<string, object> {
+                { "command", c.Command },
+                { "description", c.Description },
+                { "roles", constraint?.Roles },
+                { "userNames", constraint?.UserNames },
+            };
         }));
 
         return desc;

@@ -11,7 +11,7 @@ namespace TestPlugin.Services;
 [Description("Тестовый сервис команд")]
 public class TestService : CommandService<TestServiceConfig>
 {
-    [BotCommand("!test", UserRole.User)]
+    [BotCommand("!test")]
     [Description("Тестовая команда для теста тестов")]
     public BotMessage Test(BotMessage message)
     {
@@ -21,7 +21,7 @@ public class TestService : CommandService<TestServiceConfig>
         };
     }
 
-    [BotCommand("!adminTest", UserRole.Administrator)]
+    [BotCommand("!adminTest")]
     [Description("Тест команды администратора")]
     public BotMessage AdminTest(BotMessage message)
     {
@@ -32,7 +32,7 @@ public class TestService : CommandService<TestServiceConfig>
         };
     }
 
-    [BotCommand("!modTest", UserRole.Moderator)]
+    [BotCommand("!modTest")]
     [Description("Тест команды модератора")]
     public BotMessage ModeratorTest(BotMessage message)
     {

@@ -30,7 +30,7 @@ public class HomunculusService : CommandService<HomunculusServiceConfig>
 
     #region Команды
 
-    [BotCommand("!озвучить", UserRole.Moderator)]
+    [BotCommand("!озвучить")]
     [Description("Озвучить текст из команды. Голоса можно найти на https://rhvoice.su/voices/")]
     public BotMessage SayText(BotMessage message)
     {
@@ -169,10 +169,11 @@ public class HomunculusService : CommandService<HomunculusServiceConfig>
                 commands.Add(command.Command, new CommandInfo {
                     Command = command.Command,
                     Description = command.Description,
-                    Role = command.Role,
                     Handler = msg => PlayCommand(msg, command.FilePath)
                 });
         };
+
+        UpdateConstraints();
     }
 
     #endregion Основные функции
