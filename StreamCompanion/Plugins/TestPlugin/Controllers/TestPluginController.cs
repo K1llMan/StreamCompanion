@@ -1,33 +1,29 @@
-﻿using CompanionPlugin.Enums;
+﻿using CompanionPlugin.Controllers;
+using CompanionPlugin.Enums;
 using CompanionPlugin.Interfaces;
 using CompanionPlugin.Services;
 
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 
+using TestPlugin.Classes;
 using TestPlugin.Services;
 
 namespace TestPlugin.Controllers;
 
-[ApiController]
-[Route("[controller]")]
-public class TestPluginController : ControllerBase
+public class TestPluginController : BaseServiceController<TestServiceConfig>
 {
     #region Поля
 
     private TestSourceService testSourceService;
-    private ILogger log;
 
     #endregion Поля
 
-    public TestPluginController(ServiceResolver serviceResolver, ILogger<TestPluginController> logger)
+    public TestPluginController(ServiceResolver serviceResolver, IWritableOptions<TestServiceConfig> config) : base(config)
     {
         testSourceService = serviceResolver.Resolve<ICommandSourceService, TestSourceService>();
-        log = logger;
     }
 
     [HttpGet("version")]
-    [TypeFilter(typeof(TestService))]
     public object Version()
     {
         return "Plugin Controller v 1.0";

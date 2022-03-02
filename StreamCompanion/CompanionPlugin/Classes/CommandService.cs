@@ -71,7 +71,10 @@ public class CommandService<T> : StreamService<T>, ICommandService where T : cla
             });
         }
 
-        config.Update(c => c.Constraints = constraints);
+        config.Update(c => {
+            c.Constraints = constraints;
+            return c;
+        });
     }
 
     #endregion Вспомогательные функции

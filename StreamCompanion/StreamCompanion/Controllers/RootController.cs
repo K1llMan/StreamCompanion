@@ -4,8 +4,8 @@ using StreamCompanion.Services;
 
 namespace StreamCompanion.Controllers;
 
-[Route("api")]
 [ApiController]
+[Route("api")]
 public class RootController : ControllerBase
 {
     private StreamCompanionService service;

@@ -2,8 +2,8 @@
 
 namespace CompanionPlugin.Interfaces;
 
-public interface IWritableOptions<out T> : IOptions<T> where T : class, new()
+public interface IWritableOptions<T> : IOptions<T> where T : class, new()
 {
-    void Update(Action<T> applyChanges);
+    void Update(Func<T,T> applyChanges);
     void OnChange(Action<T> listener);
 }

@@ -90,7 +90,7 @@ public class WritableOptions<T> : IWritableOptions<T> where T : class, new()
             .AddJsonFile(settingsPath, true, true)
             .Build();
 
-        Update(data => { });
+        Update();
 
         this.options = options;
     }
@@ -99,7 +99,7 @@ public class WritableOptions<T> : IWritableOptions<T> where T : class, new()
     /// Обновление опций
     /// </summary>
     /// <param name="applyChanges">Функция, вносящая изменения в опции</param>
-    public void Update(Action<T> applyChanges)
+    public void Update(Func<T,T> applyChanges = null)
     {
         string data = File.ReadAllText(settingsPath);
 
@@ -108,7 +108,8 @@ public class WritableOptions<T> : IWritableOptions<T> where T : class, new()
             : JsonNode.Parse(data) ?? new JsonObject();
         T sectionObject = jsonNode.Deserialize<T>(ServiceJsonSerializerSettings.GetSettings()) ?? new T();
 
-        applyChanges(sectionObject);
+        if (applyChanges != null)
+            sectionObject = applyChanges(sectionObject);
 
         File.WriteAllText(settingsPath, JsonSerializer.Serialize(sectionObject, ServiceJsonSerializerSettings.GetSettings()));
 
