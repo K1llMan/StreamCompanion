@@ -27,7 +27,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DonationAlertsLib", "Librar
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{6A0E3F67-F3DC-4CDF-830D-34B79E5C90EA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StreamCompanionTests", "Tests\StreamCompanionTests\StreamCompanionTests.csproj", "{DC321E89-8D08-4FF2-A0BF-8BED664B29C1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StreamCompanionTests", "Tests\StreamCompanionTests\StreamCompanionTests.csproj", "{DC321E89-8D08-4FF2-A0BF-8BED664B29C1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrovoLib", "Libraries\TrovoLib\TrovoLib.csproj", "{9B9CC6B6-E5CE-4E16-A227-3D1177CD27DB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -67,6 +69,10 @@ Global
 		{DC321E89-8D08-4FF2-A0BF-8BED664B29C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DC321E89-8D08-4FF2-A0BF-8BED664B29C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DC321E89-8D08-4FF2-A0BF-8BED664B29C1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9B9CC6B6-E5CE-4E16-A227-3D1177CD27DB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9B9CC6B6-E5CE-4E16-A227-3D1177CD27DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9B9CC6B6-E5CE-4E16-A227-3D1177CD27DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9B9CC6B6-E5CE-4E16-A227-3D1177CD27DB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -80,6 +86,7 @@ Global
 		{B769330B-31BA-4500-811D-E7C4E274A37E} = {AAF187BF-45E7-4ACB-9AC3-6BA428E13546}
 		{D09289F6-05E4-4B34-95C8-2EE775C5C557} = {F76EF1A3-DDD6-4D92-BDB5-950F4FEEF406}
 		{DC321E89-8D08-4FF2-A0BF-8BED664B29C1} = {6A0E3F67-F3DC-4CDF-830D-34B79E5C90EA}
+		{9B9CC6B6-E5CE-4E16-A227-3D1177CD27DB} = {F76EF1A3-DDD6-4D92-BDB5-950F4FEEF406}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {71D72C3A-5756-457D-8BE5-6F5301E58440}
