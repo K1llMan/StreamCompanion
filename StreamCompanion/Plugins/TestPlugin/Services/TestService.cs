@@ -70,6 +70,16 @@ public class TestService : CommandService<TestServiceConfig>
         log.LogInformation(textEvent.Text);
     }
 
+    private async Task processTextEvent1(TextStreamEvent textEvent)
+    {
+        log.LogInformation(textEvent.Text);
+    }
+
+    private async Task processTextEvent2(TextStreamEvent textEvent)
+    {
+        log.LogInformation(textEvent.Text);
+    }
+
     #endregion Вспомогательные функции
 
     public TestService(IStreamEventsService events, IWritableOptions<TestServiceConfig> serviceConfig, ILogger<TestService> logger)
@@ -78,6 +88,8 @@ public class TestService : CommandService<TestServiceConfig>
         eventListener = events;
 
         eventListener.Subscribe<TextStreamEvent>(processTextEvent);
+        eventListener.Subscribe<TextStreamEvent>(processTextEvent1);
+        eventListener.Subscribe<TextStreamEvent>(processTextEvent2);
 
         SetConfig(serviceConfig);
     }
@@ -85,5 +97,7 @@ public class TestService : CommandService<TestServiceConfig>
     public override void Dispose()
     {
         eventListener.Unsubscribe<TextStreamEvent>(processTextEvent);
+        eventListener.Unsubscribe<TextStreamEvent>(processTextEvent1);
+        eventListener.Unsubscribe<TextStreamEvent>(processTextEvent2);
     }
 }

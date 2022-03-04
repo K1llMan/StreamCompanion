@@ -17,8 +17,11 @@ public class StreamEventsService : IStreamEventsService
     public void Publish<T>(T streamEvent) where T : StreamEvent
     {
         if (subscriptions.TryGetValue(streamEvent.Type, out List<object> handlers))
-            foreach (StreamEventHandler<T> handler in handlers)
-                handler.Invoke(streamEvent);
+            Parallel.ForEachAsync(handlers, (handler, token) => {
+                ((StreamEventHandler<T>)handler).Invoke(streamEvent);
+
+                return ValueTask.CompletedTask;
+            });
     }
 
     public void Subscribe<T>(StreamEventHandler<T> handler) where T : StreamEvent
