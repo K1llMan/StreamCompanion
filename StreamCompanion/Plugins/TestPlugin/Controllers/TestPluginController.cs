@@ -30,7 +30,8 @@ public class TestPluginController : BaseServiceController<TestServiceConfig>
     }
 
     [HttpPost("message")]
-    public object Message(string message, UserRole role)
+    [Consumes("text/plain")]
+    public object Message([FromBody]string message, UserRole role)
     {
         return testSourceService.AddMessage(message, role);
     }

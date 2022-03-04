@@ -10,6 +10,9 @@ using Microsoft.AspNetCore.Mvc.ApplicationParts;
 
 using StreamCompanion.Classes;
 
+using StreamEvents;
+using StreamEvents.Interfaces;
+
 namespace StreamCompanion.Services;
 
 public class StreamCompanionService
@@ -70,7 +73,11 @@ public class StreamCompanionService
 
     private void AddCommonServices(IServiceCollection services)
     {
+        // Форматтер для типа text/plain
+        services.AddControllers(o => o.InputFormatters.Insert(o.InputFormatters.Count, new TextPlainInputFormatter()));
+
         services.AddSingleton(sp => new ServiceResolver(sp));
+        services.AddSingleton<IStreamEventsService, StreamEventsService>();
     }
 
     private void LoadPlugins(IServiceCollection services, ConfigurationManager configuration)

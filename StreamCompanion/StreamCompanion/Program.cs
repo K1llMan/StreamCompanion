@@ -14,7 +14,7 @@ public static class Program
         builder.Host.ConfigureLogging(logging => {
             logging.ClearProviders();
             logging.AddConsole();
-            logging.SetMinimumLevel(LogLevel.Trace);
+            logging.SetMinimumLevel(LogLevel.Information);
         });
     }
 

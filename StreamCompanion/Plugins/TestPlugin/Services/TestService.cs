@@ -4,6 +4,11 @@ using CompanionPlugin.Classes;
 using CompanionPlugin.Enums;
 using CompanionPlugin.Interfaces;
 
+using Microsoft.Extensions.Logging;
+
+using StreamEvents.Events;
+using StreamEvents.Interfaces;
+
 using TestPlugin.Classes;
 
 namespace TestPlugin.Services;
@@ -11,10 +16,23 @@ namespace TestPlugin.Services;
 [Description("Тестовый сервис команд")]
 public class TestService : CommandService<TestServiceConfig>
 {
+    #region Поля
+
+    private ILogger<TestService> log;
+    private IStreamEventsService eventListener;
+
+    #endregion Поля
+
+    #region Команды
+
     [BotCommand("!test")]
     [Description("Тестовая команда для теста тестов")]
     public BotMessage Test(BotMessage message)
     {
+        eventListener.Publish(new TextStreamEvent {
+            Text = message.Text
+        });
+
         return new BotMessage {
             Text = $"Ты кто такой? Шо ты мне пришешь \"{message.Text}\"?! Нахуй пшёл!",
             Type = MessageType.Success
@@ -43,8 +61,29 @@ public class TestService : CommandService<TestServiceConfig>
         };
     }
 
-    public TestService(IWritableOptions<TestServiceConfig> serviceConfig)
+    #endregion Команды
+
+    #region Вспомогательные функции
+
+    private async Task processTextEvent(TextStreamEvent textEvent)
     {
+        log.LogInformation(textEvent.Text);
+    }
+
+    #endregion Вспомогательные функции
+
+    public TestService(IStreamEventsService events, IWritableOptions<TestServiceConfig> serviceConfig, ILogger<TestService> logger)
+    {
+        log = logger;
+        eventListener = events;
+
+        eventListener.Subscribe<TextStreamEvent>(processTextEvent);
+
         SetConfig(serviceConfig);
+    }
+
+    public override void Dispose()
+    {
+        eventListener.Unsubscribe<TextStreamEvent>(processTextEvent);
     }
 }
