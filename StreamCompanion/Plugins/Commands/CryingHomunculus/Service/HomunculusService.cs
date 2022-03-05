@@ -100,20 +100,50 @@ public class HomunculusService : CommandService<HomunculusServiceConfig>
             : path;
     }
 
+    private void ChangeVolume(AudioFileReader reader)
+    {
+        float max = 0;
+        float[] buffer = new float[reader.WaveFormat.SampleRate];
+        int read;
+        do
+        {
+            read = reader.Read(buffer, 0, buffer.Length);
+            for (int n = 0; n < read; n++)
+            {
+                float abs = Math.Abs(buffer[n]);
+                if (abs > max) 
+                    max = abs;
+            }
+        } while (read > 0);
+
+        if (max == 0 || max > 1.0f)
+            throw new InvalidOperationException("File cannot be normalized");
+
+        // rewind and amplify
+        reader.Position = 0;
+        reader.Volume = 1.0f / max;
+    }
+
     private void PlaySound(string path)
     {
-        using AudioFileReader audioFile = new(path);
-        using WaveOutEvent outputDevice = new();
-
-        outputDevice.Init(audioFile);
-        outputDevice.Play();
-
-        while (outputDevice.PlaybackState == PlaybackState.Playing)
-        {
-            Thread.Sleep(1000);
-        }
-
         nextTime = DateTime.Now.AddMilliseconds(config.Value.Timeout);
+
+        Task.Run(() => {
+            using AudioFileReader audioFile = new(path);
+            ChangeVolume(audioFile);
+
+            audioFile.Volume *= config.Value.Volume;
+
+            using WaveOutEvent outputDevice = new();
+
+            outputDevice.Init(audioFile);
+            outputDevice.Play();
+
+            while (outputDevice.PlaybackState == PlaybackState.Playing)
+            {
+                Thread.Sleep(1000);
+            }
+        });
     }
 
     private bool IsReadyToPlay()
