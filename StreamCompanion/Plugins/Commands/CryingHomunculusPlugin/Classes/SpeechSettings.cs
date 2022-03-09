@@ -1,4 +1,4 @@
-﻿namespace CryingHomunculus.Classes;
+﻿namespace CryingHomunculusPlugin.Classes;
 
 public class SpeechSettings
 {

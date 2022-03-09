@@ -1,7 +1,7 @@
 ﻿using CompanionPlugin.Classes;
 using CompanionPlugin.Interfaces;
 
-namespace CryingHomunculus.Classes;
+namespace CryingHomunculusPlugin.Classes;
 
 public class HomunculusServiceConfig : ICommandServiceSettings
 {

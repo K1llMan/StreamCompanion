@@ -1,6 +1,6 @@
 ﻿namespace CompanionPlugin.Classes;
 
-public delegate BotMessage MessageHandler(BotMessage message);
+public delegate BotResponseMessage MessageHandler(BotMessage message);
 
 public class CommandInfo
 {

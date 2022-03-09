@@ -1,19 +1,19 @@
 ﻿using CompanionPlugin.Extensions;
 using CompanionPlugin.Interfaces;
 
-using CryingHomunculus.Classes;
-using CryingHomunculus.Service;
+using CryingHomunculusPlugin.Classes;
+using CryingHomunculusPlugin.Services;
 
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace CryingHomunculus;
+namespace CryingHomunculusPlugin;
 
-public class CryingHomunculusPlugin : ICompanionPlugin
+public class CryingHomunculus : ICompanionPlugin
 {
     #region Основные функции
 
-    public CryingHomunculusPlugin()
+    public CryingHomunculus()
     {
         Name = "Crying Homunculus Plugin";
         Version = new Version(1, 0, 0, 0);

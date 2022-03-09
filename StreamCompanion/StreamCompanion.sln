@@ -17,7 +17,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Sources", "Sources", "{AAF1
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TwitchPlugin", "Plugins\Sources\TwitchPlugin\TwitchPlugin.csproj", "{A62C16FD-5A87-4569-8967-453CED77D8AE}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CryingHomunculus", "Plugins\Commands\CryingHomunculus\CryingHomunculus.csproj", "{F9ED239D-F4AC-4170-9543-D5275F767AEB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CryingHomunculusPlugin", "Plugins\Commands\CryingHomunculusPlugin\CryingHomunculusPlugin.csproj", "{F9ED239D-F4AC-4170-9543-D5275F767AEB}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DonationAlertsPlugin", "Plugins\Sources\DonationAlertsPlugin\DonationAlertsPlugin.csproj", "{B769330B-31BA-4500-811D-E7C4E274A37E}"
 EndProject
@@ -31,7 +31,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StreamCompanionTests", "Tes
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TrovoLib", "Libraries\TrovoLib\TrovoLib.csproj", "{9B9CC6B6-E5CE-4E16-A227-3D1177CD27DB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StreamEvents", "Libraries\StreamEvents\StreamEvents.csproj", "{6D6C8359-E220-46DC-8087-4C72B38BA177}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StreamEvents", "Libraries\StreamEvents\StreamEvents.csproj", "{6D6C8359-E220-46DC-8087-4C72B38BA177}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InformerPlugin", "Plugins\Commands\InformerPlugin\InformerPlugin.csproj", "{891EF56D-BDA0-4326-B401-B74116D84DE1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -79,6 +81,10 @@ Global
 		{6D6C8359-E220-46DC-8087-4C72B38BA177}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6D6C8359-E220-46DC-8087-4C72B38BA177}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6D6C8359-E220-46DC-8087-4C72B38BA177}.Release|Any CPU.Build.0 = Release|Any CPU
+		{891EF56D-BDA0-4326-B401-B74116D84DE1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{891EF56D-BDA0-4326-B401-B74116D84DE1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{891EF56D-BDA0-4326-B401-B74116D84DE1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{891EF56D-BDA0-4326-B401-B74116D84DE1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -94,6 +100,7 @@ Global
 		{DC321E89-8D08-4FF2-A0BF-8BED664B29C1} = {6A0E3F67-F3DC-4CDF-830D-34B79E5C90EA}
 		{9B9CC6B6-E5CE-4E16-A227-3D1177CD27DB} = {F76EF1A3-DDD6-4D92-BDB5-950F4FEEF406}
 		{6D6C8359-E220-46DC-8087-4C72B38BA177} = {F76EF1A3-DDD6-4D92-BDB5-950F4FEEF406}
+		{891EF56D-BDA0-4326-B401-B74116D84DE1} = {B8FBF82E-9B38-4DDE-BDDB-EF10A71D2C3D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {71D72C3A-5756-457D-8BE5-6F5301E58440}

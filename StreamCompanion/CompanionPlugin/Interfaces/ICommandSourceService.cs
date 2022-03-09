@@ -3,7 +3,7 @@ using CompanionPlugin.Enums;
 
 namespace CompanionPlugin.Interfaces;
 
-public delegate BotMessage CommandReceivedEventEventHandler(CommandReceivedArgs args);
+public delegate BotResponseMessage CommandReceivedEventEventHandler(CommandReceivedArgs args);
 
 public class CommandReceivedArgs
 {

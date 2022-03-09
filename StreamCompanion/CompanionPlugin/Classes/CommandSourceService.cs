@@ -7,10 +7,10 @@ public class CommandSourceService<T> : StreamService<T>, ICommandSourceService w
 {
     #region Вспомогательные функции
 
-    protected BotMessage Received(CommandReceivedArgs args)
+    protected BotResponseMessage Received(CommandReceivedArgs args)
     {
         return CommandReceivedEvent?.Invoke(args) 
-            ?? new BotMessage {
+            ?? new BotResponseMessage {
                 Type = MessageType.Error
             };
     }

@@ -66,7 +66,7 @@ public class TwitchSourceService: CommandSourceService<TwitchSourceServiceConfig
 
     private void OnMessageReceived(object sender, OnMessageReceivedArgs args)
     {
-        BotMessage message = Received(new CommandReceivedArgs {
+        BotResponseMessage message = Received(new CommandReceivedArgs {
             Message = args.ChatMessage.Message,
             User = args.ChatMessage.DisplayName,
             Role = GetUserRole(args.ChatMessage)
@@ -145,6 +145,13 @@ public class TwitchSourceService: CommandSourceService<TwitchSourceServiceConfig
 
         ClientConnect();
         APIConnect();
+    }
+
+    public override void Dispose()
+    {
+        client?.Disconnect();
+
+        base.Dispose();
     }
 
     #endregion Основные функции

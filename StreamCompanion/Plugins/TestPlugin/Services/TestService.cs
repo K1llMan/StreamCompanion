@@ -27,13 +27,13 @@ public class TestService : CommandService<TestServiceConfig>
 
     [BotCommand("!test")]
     [Description("Тестовая команда для теста тестов")]
-    public BotMessage Test(BotMessage message)
+    public BotResponseMessage Test(BotMessage message)
     {
         eventListener.Publish(new TextStreamEvent {
             Text = message.Text
         });
 
-        return new BotMessage {
+        return new BotResponseMessage {
             Text = $"Ты кто такой? Шо ты мне пришешь \"{message.Text}\"?! Нахуй пшёл!",
             Type = MessageType.Success
         };
@@ -41,10 +41,9 @@ public class TestService : CommandService<TestServiceConfig>
 
     [BotCommand("!adminTest")]
     [Description("Тест команды администратора")]
-    public BotMessage AdminTest(BotMessage message)
+    public BotResponseMessage AdminTest(BotMessage message)
     {
-        return new BotMessage
-        {
+        return new BotResponseMessage {
             Text = $"Привет, братюня-админ {message.User}!",
             Type = MessageType.Success
         };
@@ -52,10 +51,9 @@ public class TestService : CommandService<TestServiceConfig>
 
     [BotCommand("!modTest")]
     [Description("Тест команды модератора")]
-    public BotMessage ModeratorTest(BotMessage message)
+    public BotResponseMessage ModeratorTest(BotMessage message)
     {
-        return new BotMessage
-        {
+        return new BotResponseMessage {
             Text = $"Привет, братюня-модератор {message.User}!",
             Type = MessageType.Success
         };
@@ -87,15 +85,25 @@ public class TestService : CommandService<TestServiceConfig>
         log = logger;
         eventListener = events;
 
+        SetConfig(serviceConfig);
+    }
+
+    public override void Init()
+    {
+        if (!config.Value.Enabled)
+            return;
+
+        base.Init();
+
         eventListener.Subscribe<TextStreamEvent>(processTextEvent);
         eventListener.Subscribe<TextStreamEvent>(processTextEvent1);
         eventListener.Subscribe<TextStreamEvent>(processTextEvent2);
-
-        SetConfig(serviceConfig);
     }
 
     public override void Dispose()
     {
+        base.Dispose();
+
         eventListener.Unsubscribe<TextStreamEvent>(processTextEvent);
         eventListener.Unsubscribe<TextStreamEvent>(processTextEvent1);
         eventListener.Unsubscribe<TextStreamEvent>(processTextEvent2);

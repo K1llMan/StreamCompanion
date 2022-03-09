@@ -20,6 +20,7 @@ public class StreamCompanionService
     #region Поля
 
     private readonly string settingsFilename = "settings.json";
+    private ILogger<StreamCompanionService> log;
 
     #endregion Поля
 
@@ -52,6 +53,12 @@ public class StreamCompanionService
     private string GetRelativePath(string path)
     {
         return Path.Combine(AppContext.BaseDirectory, path);
+    }
+
+    private void InitLogger(IServiceCollection services)
+    {
+        ILoggerFactory factory = services.BuildServiceProvider().GetService<ILoggerFactory>();
+        log = factory?.CreateLogger<StreamCompanionService>();
     }
 
     private void LoadSettings(IServiceCollection services, ConfigurationManager configuration)
@@ -94,7 +101,11 @@ public class StreamCompanionService
             foreach (Type pluginType in pluginTypes)
             {
                 ICompanionPlugin plugin = (ICompanionPlugin) Activator.CreateInstance(pluginType);
-                plugin?.Init(services, configuration);
+                if (plugin == null)
+                    continue;
+
+                plugin.Init(services, configuration);
+                log.LogInformation($"Плагин \"{plugin.Name} ({plugin.Version})\" загружен.");
             }
 
             AssemblyPart part = new(assembly);
@@ -102,16 +113,16 @@ public class StreamCompanionService
         }
     }
 
-    private BotMessage ProcessMessage(CommandReceivedArgs args)
+    private BotResponseMessage ProcessMessage(CommandReceivedArgs args)
     {
         foreach (ICommandService service in CommandServices)
         {
-            BotMessage message = service.ProcessCommand(args.Message, args.User, args.Role);
+            BotResponseMessage message = service.ProcessCommand(args.Message, args.User, args.Role);
             if (message.Type != MessageType.NotCommand)
                 return message;
         }
 
-        return new BotMessage {
+        return new BotResponseMessage {
             Type = MessageType.NotCommand
         };
     }
@@ -122,6 +133,7 @@ public class StreamCompanionService
 
     public StreamCompanionService(IServiceCollection services, ConfigurationManager configuration)
     {
+        InitLogger(services);
         LoadSettings(services, configuration);
         AddCommonServices(services);
         LoadPlugins(services, configuration);
@@ -132,15 +144,24 @@ public class StreamCompanionService
         ServiceResolver = resolver;
 
         // Инициализация сервисов источников
+        log.LogInformation("Инициализация сервисов источников...");
+
         CommandSourcesServices = ServiceResolver.Resolve<ICommandSourceService>();
         CommandSourcesServices.ForEach(s => {
             s.Init();
             s.CommandReceivedEvent += ProcessMessage;
+
+            log.LogInformation($"Сервис \"{s.GetType().Name}\" инициализирован.");
         });
 
-        // Инициализация сервисов команд
+        log.LogInformation("Инициализация сервисов команд...");
         CommandServices = ServiceResolver.Resolve<ICommandService>();
-        CommandServices.ForEach(s => s.Init());
+        CommandServices.ForEach(s => {
+            s.Init();
+            log.LogInformation($"Сервис \"{s.GetType().Name}\" инициализирован.");
+        });
+
+        log.LogInformation("Инициализация сервисов завершена.");
     }
 
     public Dictionary<string, object> GetDescription()

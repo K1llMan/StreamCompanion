@@ -3,6 +3,7 @@ using System.Text.Json.Serialization;
 
 using CompanionPlugin.Services;
 
+using StreamCompanion.Classes;
 using StreamCompanion.Services;
 
 namespace StreamCompanion;
@@ -11,11 +12,18 @@ public static class Program
 {
     private static void ConfigureLogging(WebApplicationBuilder builder)
     {
-        builder.Host.ConfigureLogging(logging => {
-            logging.ClearProviders();
-            logging.AddConsole();
-            logging.SetMinimumLevel(LogLevel.Information);
-        });
+        builder.Logging
+            .ClearProviders()
+            .AddConsoleFormatter<ConsoleMessageFormatter, ConsoleMessageFormatterOptions>(opt => {
+                opt.Layout = "{category:2}: {time} [{kind}]: {msg}";
+            })
+            .AddFilter("Microsoft.AspNetCore.Hosting.Diagnostics", LogLevel.Error)
+            .AddFilter("Microsoft.AspNetCore.Routing", LogLevel.Error)
+            .AddFilter("Microsoft.AspNetCore.Mvc", LogLevel.Error)
+            .AddConsole(opt => {
+                opt.FormatterName = "ConsoleMessageFormatter";
+            })
+            .SetMinimumLevel(LogLevel.Information);
     }
 
     private static void InitConfiguration(ConfigurationManager configuration)
@@ -50,8 +58,6 @@ public static class Program
 
         // Инициализация основного сервиса
         companionService.Init(app.Services.GetService<ServiceResolver>());
-
-        app.Logger.LogInformation("Initialized");
 
         return app;
     }

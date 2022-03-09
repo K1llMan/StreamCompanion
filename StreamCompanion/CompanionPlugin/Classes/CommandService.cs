@@ -81,15 +81,15 @@ public class CommandService<T> : StreamService<T>, ICommandService where T : cla
 
     #region Основные функции
 
-    public BotMessage ProcessCommand(string message, string user, UserRole role)
+    public BotResponseMessage ProcessCommand(string message, string user, UserRole role)
     {
         if (config == null)
-            return new BotMessage {
+            return new BotResponseMessage {
                 Type = MessageType.NotCommand
             };
 
         if (!config.Value.Enabled)
-            return new BotMessage {
+            return new BotResponseMessage {
                 Type = MessageType.NotCommand
             };
 
@@ -101,7 +101,7 @@ public class CommandService<T> : StreamService<T>, ICommandService where T : cla
             string data = message.GetMatches(@"(?<=\b[\s]).+").FirstOrDefault();
 
             if (!IsCorrectCommand(command, user, role))
-                return new BotMessage {
+                return new BotResponseMessage {
                     Type = MessageType.NotCommand
                 };
 
@@ -114,7 +114,7 @@ public class CommandService<T> : StreamService<T>, ICommandService where T : cla
                 });
         }
 
-        return new BotMessage {
+        return new BotResponseMessage {
             Type = MessageType.NotCommand
         };
     }
@@ -124,11 +124,12 @@ public class CommandService<T> : StreamService<T>, ICommandService where T : cla
         commands.Clear();
 
         GetType().GetMethods()
-            .Where(m => m.GetCustomAttribute<BotCommandAttribute>() != null)
+            .Where(m => m.GetCustomAttribute<BotCommandAttribute>() != null && m.ReturnType == typeof(BotResponseMessage))
             .ToList()
             .ForEach(m => {
                 BotCommandAttribute command = m.GetCustomAttribute<BotCommandAttribute>();
                 DescriptionAttribute desc = m.GetCustomAttribute<DescriptionAttribute>();
+
 
                 if (command != null)
                     AddCommand(new CommandInfo {
@@ -139,6 +140,11 @@ public class CommandService<T> : StreamService<T>, ICommandService where T : cla
             });
 
         UpdateConstraints();
+    }
+
+    public override void Dispose()
+    {
+        commands.Clear();
     }
 
     public override Dictionary<string, object> GetDescription()

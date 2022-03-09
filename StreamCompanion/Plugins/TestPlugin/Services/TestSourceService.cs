@@ -13,7 +13,7 @@ public class TestSourceService: CommandSourceService<TestSourceServiceConfig>
 {
     #region Основные функции
 
-    public BotMessage AddMessage(string message, UserRole role)
+    public BotResponseMessage AddMessage(string message, UserRole role)
     {
         return Received(new CommandReceivedArgs {
             Message = message,

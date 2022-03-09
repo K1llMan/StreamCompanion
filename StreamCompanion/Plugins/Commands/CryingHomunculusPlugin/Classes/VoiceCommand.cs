@@ -1,6 +1,4 @@
-﻿using CompanionPlugin.Enums;
-
-namespace CryingHomunculus.Classes;
+﻿namespace CryingHomunculusPlugin.Classes;
 
 public class VoiceCommand
 {

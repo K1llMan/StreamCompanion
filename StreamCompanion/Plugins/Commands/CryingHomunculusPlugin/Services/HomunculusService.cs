@@ -5,13 +5,13 @@ using CompanionPlugin.Classes;
 using CompanionPlugin.Enums;
 using CompanionPlugin.Interfaces;
 
-using CryingHomunculus.Classes;
+using CryingHomunculusPlugin.Classes;
 
 using Microsoft.Extensions.Logging;
 
 using NAudio.Wave;
 
-namespace CryingHomunculus.Service;
+namespace CryingHomunculusPlugin.Services;
 
 [Description("Орущий гомункул")]
 public class HomunculusService : CommandService<HomunculusServiceConfig>
@@ -32,21 +32,21 @@ public class HomunculusService : CommandService<HomunculusServiceConfig>
 
     [BotCommand("!озвучить")]
     [Description("Озвучить текст из команды. Голоса можно найти на https://rhvoice.su/voices/")]
-    public BotMessage SayText(BotMessage message)
+    public BotResponseMessage SayText(BotMessage message)
     {
         if (string.IsNullOrEmpty(message.Text))
-            return new BotMessage {
+            return new BotResponseMessage {
                 Type = MessageType.Error
             };
 
         if (!IsReadyToPlay())
-            return new BotMessage {
+            return new BotResponseMessage {
                 Type = MessageType.Error
             };
 
         PlaySound(TextToSpeech(message.Text));
 
-        return new BotMessage {
+        return new BotResponseMessage {
             Type = MessageType.Success
         };
     }
@@ -151,10 +151,10 @@ public class HomunculusService : CommandService<HomunculusServiceConfig>
         return DateTime.Now > nextTime;
     }
 
-    private BotMessage PlayCommand(BotMessage message, string path)
+    private BotResponseMessage PlayCommand(BotMessage message, string path)
     {
         if (!IsReadyToPlay())
-            return new BotMessage {
+            return new BotResponseMessage {
                 Type = MessageType.Error
             };
 
@@ -163,7 +163,7 @@ public class HomunculusService : CommandService<HomunculusServiceConfig>
         if (File.Exists(path))
             PlaySound(path);
 
-        return new BotMessage {
+        return new BotResponseMessage {
             Type = MessageType.Success
         };
     }
