@@ -30,7 +30,7 @@ public class CommandService<T> : StreamService<T>, ICommandService where T : cla
         if (string.IsNullOrEmpty(command?.TrimStart('!')) || !commands.ContainsKey(command))
             return false;
 
-        List<CommandConstraints> constraints = config.Value.Constraints;
+        List<CommandConstraints> constraints = config.Value.CommandConstraints;
 
         CommandConstraints constraint = constraints.FirstOrDefault(c => c.Command == command);
         if (constraint == null)
@@ -39,15 +39,17 @@ public class CommandService<T> : StreamService<T>, ICommandService where T : cla
         if (constraint is not { Enabled: true })
             return false;
 
-        if (constraint.Roles is { Length: > 0 })
-            if (!constraint.Roles.Contains(role))
-                return false;
+        return constraint.Constraints.Any(c => {
+            if (c.Roles is { Length: > 0 })
+                if (!c.Roles.Contains(role))
+                    return false;
 
-        if (constraint.UserNames is { Length: > 0 })
-            if (!constraint.UserNames.Contains(user))
-                return false;
+            if (c.UserNames is { Length: > 0 })
+                if (!c.UserNames.Contains(user))
+                    return false;
 
-        return true;
+            return true;
+        });
     }
 
     /// <summary>
@@ -55,7 +57,7 @@ public class CommandService<T> : StreamService<T>, ICommandService where T : cla
     /// </summary>
     protected void UpdateConstraints()
     {
-        List<CommandConstraints> constraints = config.Value.Constraints;
+        List<CommandConstraints> constraints = config.Value.CommandConstraints;
 
         Func<string, bool> hasConstr = c => constraints
             .Any(con => con.Command == c);
@@ -67,12 +69,18 @@ public class CommandService<T> : StreamService<T>, ICommandService where T : cla
 
             constraints.Add(new CommandConstraints {
                 Enabled = true,
-                Command = command
+                Command = command,
+                Constraints = new() {
+                    new UserRoleConstraint {
+                        Roles = new[] { UserRole.Administrator, UserRole.Moderator, UserRole.User },
+                        UserNames = new string[] { }
+                    }
+                }
             });
         }
 
         config.Update(c => {
-            c.Constraints = constraints;
+            c.CommandConstraints = constraints;
             return c;
         });
     }
@@ -130,13 +138,13 @@ public class CommandService<T> : StreamService<T>, ICommandService where T : cla
                 BotCommandAttribute command = m.GetCustomAttribute<BotCommandAttribute>();
                 DescriptionAttribute desc = m.GetCustomAttribute<DescriptionAttribute>();
 
-
                 if (command != null)
-                    AddCommand(new CommandInfo {
-                        Command = command.Command,
-                        Description = desc?.Description,
-                        Handler = m.CreateDelegate<MessageHandler>(this)
-                    });
+                    foreach (string cmd in command.Aliases)
+                        AddCommand(new CommandInfo {
+                            Command = cmd,
+                            Description = desc?.Description,
+                            Handler = m.CreateDelegate<MessageHandler>(this)
+                        });
             });
 
         UpdateConstraints();
@@ -152,13 +160,12 @@ public class CommandService<T> : StreamService<T>, ICommandService where T : cla
         Dictionary<string, object> desc = base.GetDescription();
         desc.Add("commands", commands.Values.Select(c =>
         {
-            CommandConstraints constraint = config.Value.Constraints.FirstOrDefault(con => con.Command == c.Command);
+            CommandConstraints constraint = config.Value.CommandConstraints.FirstOrDefault(con => con.Command == c.Command);
 
             return new Dictionary<string, object> {
                 { "command", c.Command },
                 { "description", c.Description },
-                { "roles", constraint?.Roles },
-                { "userNames", constraint?.UserNames },
+                { "constraints", constraint?.Constraints }
             };
         }));
 

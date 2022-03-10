@@ -4,5 +4,5 @@ namespace CompanionPlugin.Interfaces;
 
 public interface ICommandServiceSettings : IServiceSettings
 {
-    public List<CommandConstraints> Constraints { get; set; }
+    public List<CommandConstraints> CommandConstraints { get; set; }
 }

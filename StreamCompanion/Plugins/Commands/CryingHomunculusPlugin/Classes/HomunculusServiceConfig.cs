@@ -11,5 +11,5 @@ public class HomunculusServiceConfig : ICommandServiceSettings
     public float Volume { get; set; }
     public SpeechSettings Speech { get; set; } = new();
     public List<VoiceCommand> Commands { get; set; } = new();
-    public List<CommandConstraints> Constraints { get; set; } = new();
+    public List<CommandConstraints> CommandConstraints { get; set; } = new();
 }

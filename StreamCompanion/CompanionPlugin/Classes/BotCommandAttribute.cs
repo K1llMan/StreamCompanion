@@ -1,13 +1,11 @@
-﻿using CompanionPlugin.Enums;
-
-namespace CompanionPlugin.Classes;
+﻿namespace CompanionPlugin.Classes;
 
 public class BotCommandAttribute : Attribute
 {
-    public string Command { get; }
+    public string[] Aliases { get; }
 
-    public BotCommandAttribute(string command)
+    public BotCommandAttribute(params string[] aliases)
     {
-        Command = command;
+        Aliases = aliases;
     }
 }

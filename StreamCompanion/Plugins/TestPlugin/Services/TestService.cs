@@ -25,7 +25,7 @@ public class TestService : CommandService<TestServiceConfig>
 
     #region Команды
 
-    [BotCommand("!test")]
+    [BotCommand("!test", "!тест")]
     [Description("Тестовая команда для теста тестов")]
     public BotResponseMessage Test(BotMessage message)
     {

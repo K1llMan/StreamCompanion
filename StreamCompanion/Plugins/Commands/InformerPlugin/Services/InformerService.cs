@@ -18,7 +18,7 @@ public class InformerService : CommandService<InformerServiceConfig>
 
     private IStreamEventsService events;
 
-    private CancellationTokenSource cancellationTokenSource = new();
+    private CancellationTokenSource cancellationTokenSource;
 
     #endregion Поля
 
@@ -69,19 +69,23 @@ public class InformerService : CommandService<InformerServiceConfig>
 
         base.Init();
 
+        cancellationTokenSource = new CancellationTokenSource();
+
         foreach (InformerMessage message in config.Value.Messages)
         {
             StartSend(message, cancellationTokenSource.Token);
 
-            if (!commands.ContainsKey(message.Command))
-                commands.Add(message.Command, new CommandInfo {
-                    Command = message.Command,
-                    Description = message.Text,
-                    Handler = msg => SendMessage(msg, message.Text)
-                });
+            foreach (string alias in message.Aliases)
+                if (!commands.ContainsKey(alias))
+                    commands.Add(alias, new CommandInfo {
+                        Command = alias,
+                        Description = message.Text,
+                        Handler = msg => SendMessage(msg, message.Text)
+                    });
         }
 
         UpdateConstraints();
+
     }
 
     public override void Dispose()
