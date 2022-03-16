@@ -32,9 +32,11 @@ namespace StreamCompanionTests
         [Fact]
         public void AudioPlayerTest()
         {
-            AudioPlayer player = new(new AudioPlayerConfig {
-                Volume = 0.5f
-            });
+            AudioPlayer player = new AudioPlayerBuilder()
+                .Configure(o => {
+                    o.Volume = 1.5f;
+                })
+                .Build();
 
             player.Add(new SongInfo {
                 Artist = "Test",

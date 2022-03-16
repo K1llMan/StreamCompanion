@@ -176,9 +176,11 @@ public class HomunculusService : CommandService<HomunculusServiceConfig>
                         Handler = msg => PlayCommand(msg, command.FilePath)
                     });
 
-        player = new AudioPlayer(new AudioPlayerConfig {
-            Volume = config.Value.Volume
-        });
+        player = new AudioPlayerBuilder()
+            .Configure(new AudioPlayerConfig {
+                Volume = config.Value.Volume,
+            })
+            .Build();
 
         UpdateConstraints();
     }

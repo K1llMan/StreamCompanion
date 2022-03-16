@@ -157,10 +157,12 @@ public class AudioPlayerService : CommandService<AudioPlayerServiceConfig>
                 .ToList()
                 .ForEach(File.Delete);
 
-        player = new AudioPlayer(new AudioPlayerConfig {
-            Volume = config.Value.Volume,
-            CachePath = playerCachePath
-        });
+        player = new AudioPlayerBuilder()
+            .Configure(new AudioPlayerConfig {
+                Volume = config.Value.Volume,
+                CachePath = playerCachePath
+            })
+            .Build();
 
         player.SongChanged += SongChanged;
 

@@ -141,7 +141,7 @@ public class AudioPlayer
         Play();
     }
 
-    public AudioPlayer(AudioPlayerConfig config)
+    internal AudioPlayer(AudioPlayerConfig config)
     {
         Config = config;
         outputDevice.Volume = Config.Volume;
