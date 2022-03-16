@@ -5,6 +5,7 @@ using DonationAlertsLib;
 
 using NAudioPlayer;
 using NAudioPlayer.Classes;
+using NAudioPlayer.Classes.Providers;
 
 using Xunit;
 
@@ -35,19 +36,25 @@ namespace StreamCompanionTests
             AudioPlayer player = new AudioPlayerBuilder()
                 .Configure(o => {
                     o.Volume = 1.5f;
+                    o.CachePath = "e:\\CProgs\\StreamCompanion\\output\\debug\\pluginConfigs\\audio\\";
+                    o.FFMpegPath = "e:\\CProgs\\StreamCompanion\\output\\debug\\external\\";
                 })
+                .AddYoutube()
                 .Build();
+
+            player.AddFromProvider("https://www.youtube.com/watch?v=d_E7oamupsQ");
+            player.AddFromProvider("test");
 
             player.Add(new SongInfo {
                 Artist = "Test",
                 Title = "Test",
-                FileName = "D:\\SVC\\StreamCompanion\\output\\debug\\pluginConfigs\\audio\\joan-osborne-one-of-us.mp3"
+                FileName = "e:\\CProgs\\StreamCompanion\\output\\debug\\pluginConfigs\\audio\\April Rain - My Silent Angel.mp3"
             });
 
             player.Add(new SongInfo {
                 Artist = "Test",
                 Title = "Test",
-                FileName = "D:\\SVC\\StreamCompanion\\output\\debug\\pluginConfigs\\audio\\01 - Nightmare.mp3"
+                FileName = "e:\\CProgs\\StreamCompanion\\output\\debug\\pluginConfigs\\audio\\Hatsune Miku feat. Kz (Livetune) – Tell Your World (Acoustic Cover, rhytm).mp3"
             });
 
             player.Play();

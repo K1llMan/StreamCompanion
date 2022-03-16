@@ -8,5 +8,6 @@ public class AudioPlayerServiceConfig : ICommandServiceSettings
     public bool Enabled { get; set; }
     public float Volume { get; set; }
     public string CachePath { get; set; }
+    public string FFMpegPath { get; set; }
     public List<CommandConstraints> CommandConstraints { get; set; }
 }

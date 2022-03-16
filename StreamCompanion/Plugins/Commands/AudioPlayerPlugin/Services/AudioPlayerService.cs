@@ -11,6 +11,8 @@ using Microsoft.Extensions.Logging;
 
 using NAudioPlayer;
 using NAudioPlayer.Classes;
+using NAudioPlayer.Classes.Providers;
+using NAudioPlayer.Classes.Providers.Youtube;
 
 using StreamEvents.Events;
 using StreamEvents.Interfaces;
@@ -36,7 +38,7 @@ public class AudioPlayerService : CommandService<AudioPlayerServiceConfig>
     [Description("Добавить песню")]
     public BotResponseMessage Add(BotMessage message)
     {
-        //player.Add();
+        player.AddFromProvider(message.Text);
 
         return new BotResponseMessage {
             Type = MessageType.Success
@@ -160,8 +162,10 @@ public class AudioPlayerService : CommandService<AudioPlayerServiceConfig>
         player = new AudioPlayerBuilder()
             .Configure(new AudioPlayerConfig {
                 Volume = config.Value.Volume,
-                CachePath = playerCachePath
+                CachePath = playerCachePath,
+                FFMpegPath = GetCorrectPaths(config.Value.FFMpegPath)
             })
+            .AddYoutube()
             .Build();
 
         player.SongChanged += SongChanged;

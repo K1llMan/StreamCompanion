@@ -1,6 +1,9 @@
-﻿using NAudio.Wave;
+﻿using System.Diagnostics;
+
+using NAudio.Wave;
 
 using NAudioPlayer.Classes;
+using NAudioPlayer.Interfaces;
 
 namespace NAudioPlayer;
 
@@ -20,6 +23,8 @@ public class AudioPlayer
 
     public SongInfo CurrengSong => current?.Value;
 
+    public List<ISongProvider> Providers { get; internal set; }
+
     #endregion Свойства
 
     #region События
@@ -30,21 +35,57 @@ public class AudioPlayer
 
     #region Вспомогательные функции
 
-    private void NormalizeVolume(AudioFileReader reader)
+    private string ChangeExtension(string fileName, string extension)
     {
+        return Path.Combine(Path.GetDirectoryName(fileName), $"{Path.GetFileNameWithoutExtension(fileName)}.{extension}");
+    }
+
+    private void ConvertToMp3(SongInfo info)
+    {
+        if (string.IsNullOrEmpty(Config.FFMpegPath))
+            return;
+
+        string from = info.FileName;
+        string temp = ChangeExtension(from, "tmp");
+        if (File.Exists(temp))
+            File.Delete(temp);
+
+        File.Move(from, temp);
+
+        string to = ChangeExtension(info.FileName, "mp3");
+
+        Process process = new(){
+            StartInfo = new ProcessStartInfo {
+                FileName = Path.Combine(Config.FFMpegPath, "ffmpeg.exe"),
+                Arguments = $"-i \"{temp}\" -codec:a libmp3lame -qscale:a 2 -y \"{to}\"",
+                RedirectStandardOutput = true
+            }
+        };
+
+        process.Start();
+        process?.WaitForExit();
+        File.Delete(temp);
+
+        info.FileName = to;
+    }
+
+    private void NormalizeVolume(WaveChannel32 reader)
+    {
+        ISampleProvider? provider = reader.ToSampleProvider();
+
         float max = 0;
         float[] buffer = new float[reader.WaveFormat.SampleRate];
-        int read;
+
         do
         {
-            read = reader.Read(buffer, 0, buffer.Length);
+            int read = provider.Read(buffer, 0, buffer.Length);
             for (int n = 0; n < read; n++)
             {
                 float abs = Math.Abs(buffer[n]);
                 if (abs > max)
                     max = abs;
             }
-        } while (read > 0);
+        } while (reader.Position < reader.Length);
 
         if (max == 0 || max > 1.0f)
             throw new InvalidOperationException("File cannot be normalized");
@@ -58,8 +99,10 @@ public class AudioPlayer
     {
         Stop();
 
-        AudioFileReader audioFile = new(fileName);
-        NormalizeVolume(audioFile);
+        WaveStream audioFile = new MediaFoundationReader(fileName);
+        WaveChannel32 volumeStream = new(audioFile);
+
+        NormalizeVolume(volumeStream);
 
         outputDevice.Init(audioFile);
     }
@@ -77,6 +120,8 @@ public class AudioPlayer
             while (outputDevice.PlaybackState == PlaybackState.Playing) {
                 Thread.Sleep(1000);
             }
+
+            Next();
         });
     }
 
@@ -139,6 +184,25 @@ public class AudioPlayer
     {
         InitSound(fileName);
         Play();
+    }
+
+    public void AddFromProvider(string url)
+    {
+        url = url.Trim();
+
+        ISongProvider provider = Providers?
+            .FirstOrDefault(p => p.IsCorrectUrl(url));
+
+        if (provider == null)
+            return;
+
+        SongInfo info = provider.GetSong(Config.CachePath, url);
+        if (info == null)
+            return;
+
+        ConvertToMp3(info);
+
+        Add(info);
     }
 
     internal AudioPlayer(AudioPlayerConfig config)

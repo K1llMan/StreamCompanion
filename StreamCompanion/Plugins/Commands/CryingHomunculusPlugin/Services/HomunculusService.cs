@@ -168,13 +168,19 @@ public class HomunculusService : CommandService<HomunculusServiceConfig>
                 .ForEach(File.Delete);
 
         foreach (VoiceCommand command in config.Value.Commands)
+        {
+            if (command.Aliases == null)
+                continue;
+
             foreach (string alias in command.Aliases)
                 if (!commands.ContainsKey(alias))
-                    commands.Add(alias, new CommandInfo {
+                    commands.Add(alias, new CommandInfo
+                    {
                         Command = alias,
                         Description = command.Description,
                         Handler = msg => PlayCommand(msg, command.FilePath)
                     });
+        }
 
         player = new AudioPlayerBuilder()
             .Configure(new AudioPlayerConfig {
