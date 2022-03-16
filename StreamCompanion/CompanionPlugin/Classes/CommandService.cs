@@ -58,6 +58,8 @@ public class CommandService<T> : StreamService<T>, ICommandService where T : cla
     protected void UpdateConstraints()
     {
         List<CommandConstraints> constraints = config.Value.CommandConstraints;
+        if (constraints == null)
+            constraints = new List<CommandConstraints>();
 
         Func<string, bool> hasConstr = c => constraints
             .Any(con => con.Command == c);

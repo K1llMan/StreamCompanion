@@ -13,11 +13,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="NAudio" Version="2.0.1" />
+    <ExternalData Include="External\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <ExternalData Include="External\**" />
+    <ProjectReference Include="..\..\..\Libraries\NAudioPlayer\NAudioPlayer.csproj" />
   </ItemGroup>
 
   <Target Name="CopyFiles" AfterTargets="AfterBuild">

@@ -42,6 +42,10 @@ public class InformerService : CommandService<InformerServiceConfig>
 
     private void StartSend(InformerMessage message, CancellationToken token)
     {
+        // Пропуск сообщений, которые не надо дублировать по таймауту
+        if (message.Timeout == -1)
+            return;
+
         Task.Run(() => {
             do
             {
@@ -90,7 +94,7 @@ public class InformerService : CommandService<InformerServiceConfig>
 
     public override void Dispose()
     {
-        cancellationTokenSource.Cancel(false);
+        cancellationTokenSource?.Cancel(false);
 
         base.Dispose();
     }

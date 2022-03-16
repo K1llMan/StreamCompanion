@@ -33,7 +33,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TrovoLib", "Libraries\Trovo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StreamEvents", "Libraries\StreamEvents\StreamEvents.csproj", "{6D6C8359-E220-46DC-8087-4C72B38BA177}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InformerPlugin", "Plugins\Commands\InformerPlugin\InformerPlugin.csproj", "{891EF56D-BDA0-4326-B401-B74116D84DE1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InformerPlugin", "Plugins\Commands\InformerPlugin\InformerPlugin.csproj", "{891EF56D-BDA0-4326-B401-B74116D84DE1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NAudioPlayer", "Libraries\NAudioPlayer\NAudioPlayer.csproj", "{D7246292-C0D4-4A85-A19E-C4048ADB2B13}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AudioPlayerPlugin", "Plugins\Commands\AudioPlayerPlugin\AudioPlayerPlugin.csproj", "{1DBB5735-886C-4588-A695-19FFAC504815}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -85,6 +89,14 @@ Global
 		{891EF56D-BDA0-4326-B401-B74116D84DE1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{891EF56D-BDA0-4326-B401-B74116D84DE1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{891EF56D-BDA0-4326-B401-B74116D84DE1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D7246292-C0D4-4A85-A19E-C4048ADB2B13}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D7246292-C0D4-4A85-A19E-C4048ADB2B13}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D7246292-C0D4-4A85-A19E-C4048ADB2B13}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D7246292-C0D4-4A85-A19E-C4048ADB2B13}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1DBB5735-886C-4588-A695-19FFAC504815}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1DBB5735-886C-4588-A695-19FFAC504815}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1DBB5735-886C-4588-A695-19FFAC504815}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1DBB5735-886C-4588-A695-19FFAC504815}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -101,6 +113,8 @@ Global
 		{9B9CC6B6-E5CE-4E16-A227-3D1177CD27DB} = {F76EF1A3-DDD6-4D92-BDB5-950F4FEEF406}
 		{6D6C8359-E220-46DC-8087-4C72B38BA177} = {F76EF1A3-DDD6-4D92-BDB5-950F4FEEF406}
 		{891EF56D-BDA0-4326-B401-B74116D84DE1} = {B8FBF82E-9B38-4DDE-BDDB-EF10A71D2C3D}
+		{D7246292-C0D4-4A85-A19E-C4048ADB2B13} = {F76EF1A3-DDD6-4D92-BDB5-950F4FEEF406}
+		{1DBB5735-886C-4588-A695-19FFAC504815} = {B8FBF82E-9B38-4DDE-BDDB-EF10A71D2C3D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {71D72C3A-5756-457D-8BE5-6F5301E58440}

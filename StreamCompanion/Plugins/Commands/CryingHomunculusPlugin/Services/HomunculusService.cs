@@ -9,7 +9,8 @@ using CryingHomunculusPlugin.Classes;
 
 using Microsoft.Extensions.Logging;
 
-using NAudio.Wave;
+using NAudioPlayer;
+using NAudioPlayer.Classes;
 
 namespace CryingHomunculusPlugin.Services;
 
@@ -23,6 +24,7 @@ public class HomunculusService : CommandService<HomunculusServiceConfig>
     private string speechCachePath;
 
     private DateTime nextTime = DateTime.Now;
+    private AudioPlayer player;
 
     private ILogger<HomunculusService> log;
 
@@ -45,6 +47,17 @@ public class HomunculusService : CommandService<HomunculusServiceConfig>
             };
 
         PlaySound(TextToSpeech(message.Text));
+
+        return new BotResponseMessage {
+            Type = MessageType.Success
+        };
+    }
+
+    [BotCommand("!стоп")]
+    [Description("Остановить проигрывание")]
+    public BotResponseMessage StopPlayer(BotMessage message)
+    {
+        player.Stop();
 
         return new BotResponseMessage {
             Type = MessageType.Success
@@ -100,50 +113,11 @@ public class HomunculusService : CommandService<HomunculusServiceConfig>
             : path;
     }
 
-    private void ChangeVolume(AudioFileReader reader)
-    {
-        float max = 0;
-        float[] buffer = new float[reader.WaveFormat.SampleRate];
-        int read;
-        do
-        {
-            read = reader.Read(buffer, 0, buffer.Length);
-            for (int n = 0; n < read; n++)
-            {
-                float abs = Math.Abs(buffer[n]);
-                if (abs > max) 
-                    max = abs;
-            }
-        } while (read > 0);
-
-        if (max == 0 || max > 1.0f)
-            throw new InvalidOperationException("File cannot be normalized");
-
-        // rewind and amplify
-        reader.Position = 0;
-        reader.Volume = 1.0f / max;
-    }
-
     private void PlaySound(string path)
     {
         nextTime = DateTime.Now.AddMilliseconds(config.Value.Timeout);
 
-        Task.Run(() => {
-            using AudioFileReader audioFile = new(path);
-            ChangeVolume(audioFile);
-
-            audioFile.Volume *= config.Value.Volume;
-
-            using WaveOutEvent outputDevice = new();
-
-            outputDevice.Init(audioFile);
-            outputDevice.Play();
-
-            while (outputDevice.PlaybackState == PlaybackState.Playing)
-            {
-                Thread.Sleep(1000);
-            }
-        });
+        player.PlayFile(path);
     }
 
     private bool IsReadyToPlay()
@@ -201,6 +175,10 @@ public class HomunculusService : CommandService<HomunculusServiceConfig>
                         Description = command.Description,
                         Handler = msg => PlayCommand(msg, command.FilePath)
                     });
+
+        player = new AudioPlayer(new AudioPlayerConfig {
+            Volume = config.Value.Volume
+        });
 
         UpdateConstraints();
     }
