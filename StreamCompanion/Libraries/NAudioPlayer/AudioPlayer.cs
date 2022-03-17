@@ -12,6 +12,7 @@ public class AudioPlayer
     #region Поля
 
     private WaveOutEvent outputDevice = new();
+    private WaveChannel32 stream;
     private LinkedList<SongInfo> queue = new();
     private LinkedListNode<SongInfo> current;
 
@@ -76,16 +77,17 @@ public class AudioPlayer
         float max = 0;
         float[] buffer = new float[reader.WaveFormat.SampleRate];
 
+        int read;
         do
         {
-            int read = provider.Read(buffer, 0, buffer.Length);
+            read = provider.Read(buffer, 0, buffer.Length);
             for (int n = 0; n < read; n++)
             {
                 float abs = Math.Abs(buffer[n]);
                 if (abs > max)
                     max = abs;
             }
-        } while (reader.Position < reader.Length);
+        } while (read > 0);
 
         if (max == 0 || max > 1.0f)
             throw new InvalidOperationException("File cannot be normalized");
@@ -100,11 +102,19 @@ public class AudioPlayer
         Stop();
 
         WaveStream audioFile = new MediaFoundationReader(fileName);
-        WaveChannel32 volumeStream = new(audioFile);
+        stream = new(audioFile) {
+            PadWithZeroes = false
+        };
 
-        NormalizeVolume(volumeStream);
+        NormalizeVolume(stream);
 
         outputDevice.Init(audioFile);
+    }
+
+    private bool IsSongEnded()
+    {
+        return outputDevice.PlaybackState == PlaybackState.Stopped
+            && stream.CurrentTime >= stream.TotalTime;
     }
 
     #endregion Вспомогательные функции
@@ -121,8 +131,14 @@ public class AudioPlayer
                 Thread.Sleep(1000);
             }
 
-            Next();
+            if (IsSongEnded())
+                Next();
         });
+    }
+
+    private void OutputDeviceOnPlaybackStopped(object? sender, StoppedEventArgs e)
+    {
+        throw new NotImplementedException();
     }
 
     public void Pause()
@@ -137,7 +153,7 @@ public class AudioPlayer
 
     public void Next()
     {
-        if (current.Next == null)
+        if (current?.Next == null)
             return;
         
         current = current.Next;
@@ -146,7 +162,7 @@ public class AudioPlayer
 
     public void Previous()
     {
-        if (current.Previous == null)
+        if (current?.Previous == null)
             return;
         
         current = current.Previous;
@@ -160,7 +176,12 @@ public class AudioPlayer
         if (queue.Count == 1)
         {
             current = queue.First;
-            InitSound(song.FileName);
+            PlayFile(song.FileName);
+        }
+        else if (current != null && song == queue.Last?.Value && IsSongEnded())
+        {
+            current = queue.Last;
+            PlayFile(song.FileName);
         }
     }
 
@@ -200,7 +221,7 @@ public class AudioPlayer
         if (info == null)
             return;
 
-        ConvertToMp3(info);
+        //ConvertToMp3(info);
 
         Add(info);
     }

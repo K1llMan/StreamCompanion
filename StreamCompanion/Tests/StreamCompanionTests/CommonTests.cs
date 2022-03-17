@@ -6,6 +6,7 @@ using DonationAlertsLib;
 using NAudioPlayer;
 using NAudioPlayer.Classes;
 using NAudioPlayer.Classes.Providers;
+using NAudioPlayer.Classes.Providers.Local;
 
 using Xunit;
 
@@ -40,22 +41,23 @@ namespace StreamCompanionTests
                     o.FFMpegPath = "e:\\CProgs\\StreamCompanion\\output\\debug\\external\\";
                 })
                 .AddYoutube()
+                .AddLocal(new LocalSongProviderConfig {
+                    SongsPath = "E:\\Music\\",
+                    SearchPattern = "*.mp3"
+                })
                 .Build();
 
-            player.AddFromProvider("https://www.youtube.com/watch?v=d_E7oamupsQ");
-            player.AddFromProvider("test");
+            //player.AddFromProvider("https://www.youtube.com/watch?v=d_E7oamupsQ");
+            player.AddFromProvider("Nightwish Siren");
+            player.AddFromProvider("≈ли м€со мужики");
 
+            /*
             player.Add(new SongInfo {
                 Artist = "Test",
                 Title = "Test",
-                FileName = "e:\\CProgs\\StreamCompanion\\output\\debug\\pluginConfigs\\audio\\April Rain - My Silent Angel.mp3"
+                FileName = "April Rain - My Silent Angel.mp3"
             });
-
-            player.Add(new SongInfo {
-                Artist = "Test",
-                Title = "Test",
-                FileName = "e:\\CProgs\\StreamCompanion\\output\\debug\\pluginConfigs\\audio\\Hatsune Miku feat. Kz (Livetune) Ц Tell Your World (Acoustic Cover, rhytm).mp3"
-            });
+            */
 
             player.Play();
             Thread.Sleep(10000);

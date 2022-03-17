@@ -21,7 +21,7 @@ public class CommonProvider
         return new Guid(hash).ToString();
     }
 
-    protected bool CheckUrl(string url, string pattern)
+    protected bool CheckString(string url, string pattern)
     {
         Regex regex = new(pattern);
 

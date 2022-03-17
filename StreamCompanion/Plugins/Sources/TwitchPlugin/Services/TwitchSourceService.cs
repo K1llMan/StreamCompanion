@@ -6,6 +6,9 @@ using CompanionPlugin.Interfaces;
 
 using Microsoft.Extensions.Logging;
 
+using StreamEvents.Events;
+using StreamEvents.Interfaces;
+
 using TwitchLib.Api;
 using TwitchLib.Api.Core;
 using TwitchLib.Client;
@@ -23,6 +26,7 @@ public class TwitchSourceService: CommandSourceService<TwitchSourceServiceConfig
 {
     #region Поля
 
+    private IStreamEventsService eventListener;
     private ILogger<TwitchSourceService> log;
     private TwitchClient client;
 
@@ -123,12 +127,18 @@ public class TwitchSourceService: CommandSourceService<TwitchSourceServiceConfig
         });
     }
 
+    private async Task ProcessBotResponse(TextStreamEvent textEvent)
+    {
+        Send(textEvent.Text);
+    }
+
     #endregion Вспомогательные функции
 
     #region Основные функции
 
-    public TwitchSourceService(IWritableOptions<TwitchSourceServiceConfig> serviceConfig, ILogger<TwitchSourceService> logger)
+    public TwitchSourceService(IStreamEventsService events, IWritableOptions<TwitchSourceServiceConfig> serviceConfig, ILogger<TwitchSourceService> logger)
     {
+        eventListener = events;
         log = logger;
         SetConfig(serviceConfig);
     }
@@ -143,12 +153,22 @@ public class TwitchSourceService: CommandSourceService<TwitchSourceServiceConfig
         if (string.IsNullOrEmpty(config.Value.Token))
             return;
 
+        if (config.Value.SubscribeToEvents)
+        {
+            eventListener.Subscribe<TextStreamEvent>(ProcessBotResponse);
+        }
+
         ClientConnect();
         APIConnect();
     }
 
     public override void Dispose()
     {
+        if (config.Value.SubscribeToEvents)
+        {
+            eventListener.Unsubscribe<TextStreamEvent>(ProcessBotResponse);
+        }
+
         client?.Disconnect();
 
         base.Dispose();

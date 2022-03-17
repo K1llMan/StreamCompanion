@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel;
-using System.Diagnostics;
 
 using AudioPlayerPlugin.Classes;
 
@@ -12,7 +11,6 @@ using Microsoft.Extensions.Logging;
 using NAudioPlayer;
 using NAudioPlayer.Classes;
 using NAudioPlayer.Classes.Providers;
-using NAudioPlayer.Classes.Providers.Youtube;
 
 using StreamEvents.Events;
 using StreamEvents.Interfaces;
@@ -117,6 +115,34 @@ public class AudioPlayerService : CommandService<AudioPlayerServiceConfig>
         };
     }
 
+    [BotCommand("!djWhat")]
+    [Description("Информация о треке")]
+    public BotResponseMessage What(BotMessage message)
+    {
+        if (player.CurrengSong == null)
+        {
+            eventListener.Publish(new TextStreamEvent {
+                Text = $"Песня отсутствует"
+            });
+
+            return new BotResponseMessage {
+                Type = MessageType.Error
+            };
+        }
+
+        string title = string.Join(" - ", new[] { player.CurrengSong.Artist, player.CurrengSong.Title }
+            .Where(s => !string.IsNullOrEmpty(s))
+        );
+
+        eventListener.Publish(new TextStreamEvent {
+            Text = $"Песня \"{title}\""
+        });
+
+        return new BotResponseMessage {
+            Type = MessageType.Success
+        };
+    }
+
     #endregion Команды
 
     #region Вспомогательные функции
@@ -130,9 +156,33 @@ public class AudioPlayerService : CommandService<AudioPlayerServiceConfig>
 
     private void SongChanged(object? sender, SongInfo song)
     {
+        string title = string.Join(" - ", new[] { song.Artist, song.Title }
+            .Where(s => !string.IsNullOrEmpty(s))
+        );
+
         eventListener.Publish(new TextStreamEvent {
-            Text = $"Песня \"{song.Artist} - {song.Title}\""
+            Text = $"Песня \"{title}\""
         });
+    }
+
+    private AudioPlayer InitPlayer(string cachePath)
+    {
+        AudioPlayerBuilder playerBuilder = new AudioPlayerBuilder()
+            .Configure(new AudioPlayerConfig {
+                Volume = config.Value.Volume,
+                CachePath = cachePath,
+                FFMpegPath = GetCorrectPaths(config.Value.FFMpegPath)
+            })
+            .AddYoutube(config.Value.Providers?.Youtube);
+
+        if (config.Value.Providers?.Local != null)
+            playerBuilder.AddLocal(config.Value.Providers?.Local);
+
+        AudioPlayer songPlayer = playerBuilder.Build();
+
+        songPlayer.SongChanged += SongChanged;
+
+        return songPlayer;
     }
 
     #endregion Вспомогательные функции
@@ -159,16 +209,7 @@ public class AudioPlayerService : CommandService<AudioPlayerServiceConfig>
                 .ToList()
                 .ForEach(File.Delete);
 
-        player = new AudioPlayerBuilder()
-            .Configure(new AudioPlayerConfig {
-                Volume = config.Value.Volume,
-                CachePath = playerCachePath,
-                FFMpegPath = GetCorrectPaths(config.Value.FFMpegPath)
-            })
-            .AddYoutube()
-            .Build();
-
-        player.SongChanged += SongChanged;
+        player = InitPlayer(playerCachePath);
 
         UpdateConstraints();
     }

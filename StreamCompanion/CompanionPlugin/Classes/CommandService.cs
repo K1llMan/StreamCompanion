@@ -74,7 +74,7 @@ public class CommandService<T> : StreamService<T>, ICommandService where T : cla
                 Command = command,
                 Constraints = new() {
                     new UserRoleConstraint {
-                        Roles = new[] { UserRole.Administrator, UserRole.Moderator, UserRole.User },
+                        Roles = new[] { UserRole.Administrator, UserRole.Moderator },
                         UserNames = new string[] { }
                     }
                 }

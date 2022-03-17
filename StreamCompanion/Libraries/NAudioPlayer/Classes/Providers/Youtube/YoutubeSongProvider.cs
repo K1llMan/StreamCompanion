@@ -17,7 +17,7 @@ public class YoutubeSongProvider : CommonProvider, ISongProvider
 
     public bool IsCorrectUrl(string url)
     {
-        return CheckUrl(url, "https://(www\\.)youtube.com");
+        return CheckString(url, "https://(www\\.)youtube.com");
     }
 
     public SongInfo GetSong(string cachePath, string path)
