@@ -113,8 +113,7 @@ public class AudioPlayer
 
     private bool IsSongEnded()
     {
-        return outputDevice.PlaybackState == PlaybackState.Stopped
-            && stream.CurrentTime >= stream.TotalTime;
+        return outputDevice.PlaybackState == PlaybackState.Stopped;
     }
 
     #endregion Вспомогательные функции
