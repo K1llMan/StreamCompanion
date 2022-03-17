@@ -99,14 +99,15 @@ public class AudioPlayer
 
     private void InitSound(string fileName)
     {
-        Stop();
-
         WaveStream audioFile = new MediaFoundationReader(fileName);
         stream = new(audioFile) {
             PadWithZeroes = false
         };
 
         NormalizeVolume(stream);
+
+        if (!IsSongEnded())
+            Stop();
 
         outputDevice.Init(audioFile);
     }
@@ -219,8 +220,6 @@ public class AudioPlayer
         SongInfo info = provider.GetSong(Config.CachePath, url);
         if (info == null)
             return;
-
-        //ConvertToMp3(info);
 
         Add(info);
     }

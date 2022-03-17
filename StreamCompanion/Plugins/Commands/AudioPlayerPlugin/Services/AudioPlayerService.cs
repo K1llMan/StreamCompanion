@@ -80,7 +80,7 @@ public class AudioPlayerService : CommandService<AudioPlayerServiceConfig>
     [Description("Установить уровень громкости")]
     public BotResponseMessage Volume(BotMessage message)
     {
-        if (!float.TryParse(message.Command, out float volume))
+        if (!float.TryParse(message.Text.Replace(".", ","), out float volume))
             return new BotResponseMessage {
                 Text = "Неверное значение громкости",
                 Type = MessageType.Error

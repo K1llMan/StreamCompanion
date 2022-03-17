@@ -46,7 +46,6 @@ public class YoutubeSongProvider : CommonProvider, ISongProvider
 
             return new SongInfo
             {
-                Artist = video.Author.Title,
                 Title = video.Title,
                 FileName = fileName
             };
