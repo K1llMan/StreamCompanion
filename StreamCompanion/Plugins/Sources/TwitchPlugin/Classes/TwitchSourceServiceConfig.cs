@@ -1,10 +1,10 @@
-﻿using CompanionPlugin.Interfaces;
+﻿using CompanionPlugin.Classes;
+using CompanionPlugin.Interfaces;
 
 namespace TwitchPlugin.Classes;
 
-public class TwitchSourceServiceConfig : ICommandSourceServiceSettings
+public class TwitchSourceServiceConfig : ServiceSettings, ICommandSourceServiceSettings
 {
-    public bool Enabled { get; set; }
     public bool SubscribeToEvents { get; set; }
     public string Login { get; set; }
     public string ClientId { get; set; }

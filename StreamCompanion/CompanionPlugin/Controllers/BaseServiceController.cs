@@ -1,5 +1,7 @@
 ﻿using CompanionPlugin.Interfaces;
 
+using Json.Schema;
+
 using Microsoft.AspNetCore.Mvc;
 
 namespace CompanionPlugin.Controllers;
@@ -23,5 +25,11 @@ public class BaseServiceController<T> : Controller where T: class, IServiceSetti
     public void UpdateConfig(T newConfig)
     {
         config.Update(c => newConfig);
+    }
+
+    [HttpGet("config/schema")]
+    public JsonSchema GetSchema()
+    {
+        return config.Value.Schema;
     }
 }

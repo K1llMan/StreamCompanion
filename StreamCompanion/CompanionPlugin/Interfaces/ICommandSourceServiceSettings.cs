@@ -1,4 +1,6 @@
-﻿namespace CompanionPlugin.Interfaces;
+﻿using Json.Schema.Generation;
+
+namespace CompanionPlugin.Interfaces;
 
 public interface ICommandSourceServiceSettings : IServiceSettings
 {

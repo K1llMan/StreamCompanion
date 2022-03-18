@@ -1,8 +1,12 @@
-﻿using CompanionPlugin.Interfaces;
+﻿using CompanionPlugin.Classes;
+using CompanionPlugin.Interfaces;
+
+using Json.Schema.Generation;
 
 namespace TestPlugin.Classes;
 
-public class TestSourceServiceConfig : IServiceSettings
+public class TestSourceServiceConfig : ServiceSettings, ICommandSourceServiceSettings
 {
-    public bool Enabled { get; set; }
+    [Title("Подписка на события")]
+    public bool SubscribeToEvents { get; set; }
 }

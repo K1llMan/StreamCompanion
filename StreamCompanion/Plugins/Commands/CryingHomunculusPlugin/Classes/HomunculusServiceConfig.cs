@@ -3,9 +3,8 @@ using CompanionPlugin.Interfaces;
 
 namespace CryingHomunculusPlugin.Classes;
 
-public class HomunculusServiceConfig : ICommandServiceSettings
+public class HomunculusServiceConfig : ServiceSettings, ICommandServiceSettings
 {
-    public bool Enabled { get; set; }
     public int Timeout { get; set; }
     public string AudioPath { get; set; }
     public float Volume { get; set; }

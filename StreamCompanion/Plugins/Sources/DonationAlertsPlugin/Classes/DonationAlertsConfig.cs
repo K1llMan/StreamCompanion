@@ -1,9 +1,8 @@
-﻿using CompanionPlugin.Interfaces;
+﻿using CompanionPlugin.Classes;
 
 namespace DonationAlertsPlugin.Classes;
 
-public class DonationAlertsConfig : IServiceSettings
+public class DonationAlertsConfig : ServiceSettings
 {
-    public bool Enabled { get; set; }
     public string ApiToken { get; set; }
 }

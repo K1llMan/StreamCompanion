@@ -29,6 +29,8 @@ public class Test : ICompanionPlugin
     public void Init(IServiceCollection services, ConfigurationManager configuration)
     {
         services.ConfigureWritable<TestServiceConfig>("test.json");
+        services.ConfigureWritable<TestSourceServiceConfig>("testSource.json");
+
         services.AddSingleton<ICommandService, TestService>();
         services.AddSingleton<ICommandSourceService, TestSourceService>();
     }

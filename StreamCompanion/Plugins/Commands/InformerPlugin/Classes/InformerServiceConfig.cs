@@ -3,9 +3,8 @@ using CompanionPlugin.Interfaces;
 
 namespace InformerPlugin.Classes;
 
-public class InformerServiceConfig : ICommandServiceSettings
+public class InformerServiceConfig : ServiceSettings, ICommandServiceSettings
 {
-    public bool Enabled { get; set; }
     public List<InformerMessage> Messages { get; set; } = new();
     public List<CommandConstraints> CommandConstraints { get; set; } = new();
 }

@@ -3,9 +3,8 @@ using CompanionPlugin.Interfaces;
 
 namespace AudioPlayerPlugin.Classes;
 
-public class AudioPlayerServiceConfig : ICommandServiceSettings
+public class AudioPlayerServiceConfig : ServiceSettings, ICommandServiceSettings
 {
-    public bool Enabled { get; set; }
     public float Volume { get; set; }
     public string CachePath { get; set; }
     public string FFMpegPath { get; set; }

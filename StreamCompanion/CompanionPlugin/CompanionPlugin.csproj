@@ -20,6 +20,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="JsonSchema.Net" Version="2.1.1" />
+    <PackageReference Include="JsonSchema.Net.Generation" Version="1.8.3" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Libraries\StreamEvents\StreamEvents.csproj" />
   </ItemGroup>
 
