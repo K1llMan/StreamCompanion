@@ -1,6 +1,7 @@
-﻿using System.ComponentModel;
-
-using CompanionPlugin.Classes;
+﻿using CompanionPlugin.Classes;
+using CompanionPlugin.Classes.Attributes;
+using CompanionPlugin.Classes.Models;
+using CompanionPlugin.Classes.Services;
 using CompanionPlugin.Enums;
 using CompanionPlugin.Interfaces;
 
@@ -21,7 +22,7 @@ using TwitchPlugin.Classes;
 
 namespace TwitchPlugin.Services;
 
-[Description("Twitch")]
+[StreamService("Twitch", "twitch.json")]
 public class TwitchSourceService: CommandSourceService<TwitchSourceServiceConfig>
 {
     #region Поля

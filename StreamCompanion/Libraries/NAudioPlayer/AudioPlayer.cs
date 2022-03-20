@@ -12,7 +12,7 @@ public class AudioPlayer
     #region Поля
 
     private WaveOutEvent outputDevice = new();
-    private WaveChannel32 stream;
+    private WaveChannel32? stream;
     private LinkedList<SongInfo> queue = new();
     private LinkedListNode<SongInfo> current;
 
@@ -123,6 +123,9 @@ public class AudioPlayer
 
     public void Play()
     {
+        if (stream == null)
+            return;
+
         Task.Run(() => {
             SongChanged?.Invoke(this, CurrengSong);
             outputDevice.Play();

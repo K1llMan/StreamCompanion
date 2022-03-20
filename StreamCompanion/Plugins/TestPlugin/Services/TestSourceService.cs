@@ -1,6 +1,7 @@
-﻿using System.ComponentModel;
-
-using CompanionPlugin.Classes;
+﻿using CompanionPlugin.Classes;
+using CompanionPlugin.Classes.Attributes;
+using CompanionPlugin.Classes.Models;
+using CompanionPlugin.Classes.Services;
 using CompanionPlugin.Enums;
 using CompanionPlugin.Interfaces;
 
@@ -8,7 +9,7 @@ using TestPlugin.Classes;
 
 namespace TestPlugin.Services;
 
-[Description("Тестовый сервис-источник")]
+[StreamService("Тестовый сервис-источник", "testSource.json")]
 public class TestSourceService: CommandSourceService<TestSourceServiceConfig>
 {
     #region Основные функции
@@ -20,6 +21,15 @@ public class TestSourceService: CommandSourceService<TestSourceServiceConfig>
             User = "Test user",
             Role = role
         });
+    }
+
+    #endregion Основные функции
+
+    #region Основные функции
+
+    public TestSourceService(IWritableOptions<TestSourceServiceConfig> serviceConfig)
+    {
+        SetConfig(serviceConfig);
     }
 
     #endregion Основные функции

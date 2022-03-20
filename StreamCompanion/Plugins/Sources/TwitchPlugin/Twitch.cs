@@ -4,7 +4,6 @@ using CompanionPlugin.Interfaces;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-using TwitchPlugin.Classes;
 using TwitchPlugin.Services;
 
 namespace TwitchPlugin;
@@ -28,8 +27,7 @@ public class Twitch : ICompanionPlugin
 
     public void Init(IServiceCollection services, ConfigurationManager configuration)
     {
-        services.ConfigureWritable<TwitchSourceServiceConfig>("twitch.json");
-        services.AddSingleton<ICommandSourceService, TwitchSourceService>();
+        services.AddStreamService<TwitchSourceService>();
     }
 
     #endregion ICompanionPlugin

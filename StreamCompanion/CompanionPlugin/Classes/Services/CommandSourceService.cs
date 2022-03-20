@@ -1,7 +1,8 @@
-﻿using CompanionPlugin.Enums;
+﻿using CompanionPlugin.Classes.Models;
+using CompanionPlugin.Enums;
 using CompanionPlugin.Interfaces;
 
-namespace CompanionPlugin.Classes;
+namespace CompanionPlugin.Classes.Services;
 
 public class CommandSourceService<T> : StreamService<T>, ICommandSourceService where T : class, IServiceSettings, new()
 {

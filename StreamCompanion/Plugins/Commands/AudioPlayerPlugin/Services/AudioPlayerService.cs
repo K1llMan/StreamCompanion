@@ -3,6 +3,9 @@
 using AudioPlayerPlugin.Classes;
 
 using CompanionPlugin.Classes;
+using CompanionPlugin.Classes.Attributes;
+using CompanionPlugin.Classes.Models;
+using CompanionPlugin.Classes.Services;
 using CompanionPlugin.Enums;
 using CompanionPlugin.Interfaces;
 
@@ -17,7 +20,7 @@ using StreamEvents.Interfaces;
 
 namespace AudioPlayerPlugin.Services;
 
-[Description("Музыкальный плеер")]
+[StreamService("Музыкальный плеер", "audioPlayer.json")]
 public class AudioPlayerService : CommandService<AudioPlayerServiceConfig>
 {
     #region Поля
@@ -154,8 +157,11 @@ public class AudioPlayerService : CommandService<AudioPlayerServiceConfig>
             : path;
     }
 
-    private void SongChanged(object? sender, SongInfo song)
+    private void SongChanged(object? sender, SongInfo? song)
     {
+        if (song == null)
+            return;
+
         string title = string.Join(" - ", new[] { song.Artist, song.Title }
             .Where(s => !string.IsNullOrEmpty(s))
         );

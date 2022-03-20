@@ -1,7 +1,6 @@
 ﻿using CompanionPlugin.Extensions;
 using CompanionPlugin.Interfaces;
 
-using CryingHomunculusPlugin.Classes;
 using CryingHomunculusPlugin.Services;
 
 using Microsoft.Extensions.Configuration;
@@ -28,8 +27,7 @@ public class CryingHomunculus : ICompanionPlugin
 
     public void Init(IServiceCollection services, ConfigurationManager configuration)
     {
-        services.ConfigureWritable<HomunculusServiceConfig>("cryingHomunculus.json");
-        services.AddSingleton<ICommandService, HomunculusService>();
+        services.AddStreamService<HomunculusService>();
     }
 
     #endregion ICompanionPlugin

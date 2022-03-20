@@ -2,7 +2,7 @@
 
 using Json.Schema.Generation;
 
-namespace CompanionPlugin.Classes;
+namespace CompanionPlugin.Classes.Models;
 
 public class UserRoleConstraint
 {

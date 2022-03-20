@@ -1,6 +1,7 @@
-﻿using System.ComponentModel;
-
-using CompanionPlugin.Classes;
+﻿using CompanionPlugin.Classes;
+using CompanionPlugin.Classes.Attributes;
+using CompanionPlugin.Classes.Models;
+using CompanionPlugin.Classes.Services;
 using CompanionPlugin.Enums;
 using CompanionPlugin.Interfaces;
 
@@ -11,7 +12,7 @@ using StreamEvents.Interfaces;
 
 namespace InformerPlugin.Services;
 
-[Description("Сервис-информатор")]
+[StreamService("Сервис-информатор", "informer.json")]
 public class InformerService : CommandService<InformerServiceConfig>
 {
     #region Поля

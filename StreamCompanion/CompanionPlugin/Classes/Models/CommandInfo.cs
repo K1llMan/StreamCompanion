@@ -1,4 +1,4 @@
-﻿namespace CompanionPlugin.Classes;
+﻿namespace CompanionPlugin.Classes.Models;
 
 public delegate BotResponseMessage MessageHandler(BotMessage message);
 

@@ -21,6 +21,12 @@ public class BaseServiceController<T> : Controller where T: class, IServiceSetti
         config = serviceConfig;
     }
 
+    [HttpGet("config")]
+    public T GetConfig()
+    {
+        return config.Value;
+    }
+
     [HttpPost("config")]
     public void UpdateConfig(T newConfig)
     {

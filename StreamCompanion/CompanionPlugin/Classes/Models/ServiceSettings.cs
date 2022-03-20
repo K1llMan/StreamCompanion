@@ -1,11 +1,12 @@
 ﻿using System.Text.Json;
+using System.Text.Json.Serialization;
 
 using CompanionPlugin.Interfaces;
 
 using Json.Schema;
 using Json.Schema.Generation;
 
-namespace CompanionPlugin.Classes;
+namespace CompanionPlugin.Classes.Models;
 
 public class ServiceSettings : IServiceSettings
 {
@@ -14,6 +15,7 @@ public class ServiceSettings : IServiceSettings
     [Title("Доступность сервиса")]
     public bool Enabled { get; set; }
     [JsonExclude]
+    [JsonIgnore]
     public JsonSchema Schema { get; set; }
 
     #endregion Свойства

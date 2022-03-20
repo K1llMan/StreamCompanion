@@ -1,4 +1,5 @@
 ﻿using CompanionPlugin.Classes;
+using CompanionPlugin.Classes.Models;
 using CompanionPlugin.Interfaces;
 
 namespace TwitchPlugin.Classes;

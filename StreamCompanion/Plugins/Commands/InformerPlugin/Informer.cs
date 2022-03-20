@@ -1,7 +1,6 @@
 ﻿using CompanionPlugin.Extensions;
 using CompanionPlugin.Interfaces;
 
-using InformerPlugin.Classes;
 using InformerPlugin.Services;
 
 using Microsoft.Extensions.Configuration;
@@ -28,8 +27,7 @@ public class Informer : ICompanionPlugin
 
     public void Init(IServiceCollection services, ConfigurationManager configuration)
     {
-        services.ConfigureWritable<InformerServiceConfig>("informer.json");
-        services.AddSingleton<ICommandService, InformerService>();
+        services.AddStreamService<InformerService>();
     }
 
     #endregion ICompanionPlugin

@@ -1,11 +1,13 @@
 ﻿using System.ComponentModel;
 using System.Reflection;
 
+using CompanionPlugin.Classes.Attributes;
+using CompanionPlugin.Classes.Models;
 using CompanionPlugin.Enums;
 using CompanionPlugin.Extensions;
 using CompanionPlugin.Interfaces;
 
-namespace CompanionPlugin.Classes;
+namespace CompanionPlugin.Classes.Services;
 
 public class CommandService<T> : StreamService<T>, ICommandService where T : class, ICommandServiceSettings, new()
 {

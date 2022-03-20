@@ -1,11 +1,10 @@
-﻿using System.ComponentModel;
-using System.Reflection;
+﻿using System.Reflection;
 
+using CompanionPlugin.Classes.Attributes;
 using CompanionPlugin.Interfaces;
 
-namespace CompanionPlugin.Classes;
+namespace CompanionPlugin.Classes.Services;
 
-[Description("Базовый сервис")]
 public class StreamService<T> : IStreamService where T : class, IServiceSettings, new()
 {
     #region Поля
@@ -36,7 +35,7 @@ public class StreamService<T> : IStreamService where T : class, IServiceSettings
 
     public virtual Dictionary<string, object> GetDescription()
     {
-        DescriptionAttribute desc = GetType().GetCustomAttribute<DescriptionAttribute>();
+        StreamServiceAttribute desc = GetType().GetCustomAttribute<StreamServiceAttribute>();
 
         return new Dictionary<string, object> {
             { "name", desc?.Description ?? string.Empty }

@@ -1,4 +1,4 @@
-﻿namespace CompanionPlugin.Classes;
+﻿namespace CompanionPlugin.Classes.Models;
 
 public class PluginSettings
 {

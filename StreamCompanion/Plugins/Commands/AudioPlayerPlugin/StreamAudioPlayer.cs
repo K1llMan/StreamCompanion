@@ -1,5 +1,4 @@
-﻿using AudioPlayerPlugin.Classes;
-using AudioPlayerPlugin.Services;
+﻿using AudioPlayerPlugin.Services;
 
 using CompanionPlugin.Extensions;
 using CompanionPlugin.Interfaces;
@@ -28,8 +27,7 @@ public class StreamAudioPlayer : ICompanionPlugin
 
     public void Init(IServiceCollection services, ConfigurationManager configuration)
     {
-        services.ConfigureWritable<AudioPlayerServiceConfig>("audioPlayer.json");
-        services.AddSingleton<ICommandService, AudioPlayerService>();
+        services.AddStreamService<AudioPlayerService>();
     }
 
     #endregion ICompanionPlugin

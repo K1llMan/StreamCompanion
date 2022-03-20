@@ -1,7 +1,7 @@
-﻿using System.Text.Encodings.Web;
-using System.Text.Json;
+﻿using System.Text.Json;
 using System.Text.Json.Nodes;
 
+using CompanionPlugin.Classes.Models;
 using CompanionPlugin.Interfaces;
 
 using Microsoft.Extensions.Configuration;

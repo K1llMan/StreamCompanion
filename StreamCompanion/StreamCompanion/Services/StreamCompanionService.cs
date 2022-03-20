@@ -2,7 +2,9 @@
 using System.Text.Json;
 
 using CompanionPlugin.Classes;
+using CompanionPlugin.Classes.Models;
 using CompanionPlugin.Enums;
+using CompanionPlugin.Extensions;
 using CompanionPlugin.Interfaces;
 using CompanionPlugin.Services;
 
@@ -98,6 +100,9 @@ public class StreamCompanionService
                 .Where(t => t.GetInterface(nameof(ICompanionPlugin)) != null)
                 .ToArray();
 
+            if (pluginTypes.Length == 0)
+                continue;
+
             foreach (Type pluginType in pluginTypes)
             {
                 ICompanionPlugin plugin = (ICompanionPlugin) Activator.CreateInstance(pluginType);
@@ -111,6 +116,16 @@ public class StreamCompanionService
             AssemblyPart part = new(assembly);
             services.AddControllers().PartManager.ApplicationParts.Add(part);
         }
+
+        services
+            // Добавление соглашения по контроллерам с шаблонными типами
+            .AddMvc(o => {
+                o.Conventions.Add(new GenericControllerRouteConvention());
+            })
+            // Добавление контроллеров с шаблонными типами
+            .ConfigureApplicationPartManager(m => {
+                m.FeatureProviders.Add(new StreamControllerFeature());
+            });
     }
 
     private BotResponseMessage ProcessMessage(CommandReceivedArgs args)

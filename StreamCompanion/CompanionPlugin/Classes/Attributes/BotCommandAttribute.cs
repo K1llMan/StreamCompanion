@@ -1,4 +1,4 @@
-﻿namespace CompanionPlugin.Classes;
+﻿namespace CompanionPlugin.Classes.Attributes;
 
 public class BotCommandAttribute : Attribute
 {

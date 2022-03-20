@@ -1,7 +1,6 @@
 ﻿using CompanionPlugin.Extensions;
 using CompanionPlugin.Interfaces;
 
-using DonationAlertsPlugin.Classes;
 using DonationAlertsPlugin.Services;
 
 using Microsoft.Extensions.Configuration;
@@ -28,8 +27,7 @@ public class DonationAlerts : ICompanionPlugin
 
     public void Init(IServiceCollection services, ConfigurationManager configuration)
     {
-        services.ConfigureWritable<DonationAlertsConfig>("donationAlerts.json");
-        services.AddSingleton<ICommandSourceService, DonationAlertsSourceService>();
+        services.AddStreamService<DonationAlertsSourceService>();
     }
 
     #endregion ICompanionPlugin

@@ -1,6 +1,6 @@
 ﻿using CompanionPlugin.Enums;
 
-namespace CompanionPlugin.Classes;
+namespace CompanionPlugin.Classes.Models;
 
 public class BotResponseMessage
 {

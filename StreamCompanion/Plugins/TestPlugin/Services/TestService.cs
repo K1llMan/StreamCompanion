@@ -1,6 +1,9 @@
 ﻿using System.ComponentModel;
 
 using CompanionPlugin.Classes;
+using CompanionPlugin.Classes.Attributes;
+using CompanionPlugin.Classes.Models;
+using CompanionPlugin.Classes.Services;
 using CompanionPlugin.Enums;
 using CompanionPlugin.Interfaces;
 
@@ -13,7 +16,7 @@ using TestPlugin.Classes;
 
 namespace TestPlugin.Services;
 
-[Description("Тестовый сервис команд")]
+[StreamService("Тестовый сервис команд", "test.json")]
 public class TestService : CommandService<TestServiceConfig>
 {
     #region Поля

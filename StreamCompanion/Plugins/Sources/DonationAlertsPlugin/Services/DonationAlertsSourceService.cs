@@ -1,6 +1,5 @@
-﻿using System.ComponentModel;
-
-using CompanionPlugin.Classes;
+﻿using CompanionPlugin.Classes.Attributes;
+using CompanionPlugin.Classes.Services;
 using CompanionPlugin.Interfaces;
 
 using DonationAlertsLib;
@@ -10,7 +9,7 @@ using DonationAlertsPlugin.Classes;
 
 namespace DonationAlertsPlugin.Services;
 
-[Description("Donation Alerts")]
+[StreamService("Donation Alerts", "donationAlerts.json")]
 public class DonationAlertsSourceService : CommandSourceService<DonationAlertsConfig>
 {
     #region Поля

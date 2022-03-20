@@ -2,6 +2,9 @@
 using System.Diagnostics;
 
 using CompanionPlugin.Classes;
+using CompanionPlugin.Classes.Attributes;
+using CompanionPlugin.Classes.Models;
+using CompanionPlugin.Classes.Services;
 using CompanionPlugin.Enums;
 using CompanionPlugin.Interfaces;
 
@@ -14,7 +17,7 @@ using NAudioPlayer.Classes;
 
 namespace CryingHomunculusPlugin.Services;
 
-[Description("Орущий гомункул")]
+[StreamService("Орущий гомункул", "cryingHomunculus.json")]
 public class HomunculusService : CommandService<HomunculusServiceConfig>
 {
     #region Поля

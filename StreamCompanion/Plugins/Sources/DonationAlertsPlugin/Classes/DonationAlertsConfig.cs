@@ -1,4 +1,5 @@
 ﻿using CompanionPlugin.Classes;
+using CompanionPlugin.Classes.Models;
 
 namespace DonationAlertsPlugin.Classes;
 
