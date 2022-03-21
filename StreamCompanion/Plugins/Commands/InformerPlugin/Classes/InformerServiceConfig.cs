@@ -1,5 +1,4 @@
-﻿using CompanionPlugin.Classes;
-using CompanionPlugin.Classes.Models;
+﻿using CompanionPlugin.Classes.Models;
 using CompanionPlugin.Interfaces;
 
 namespace InformerPlugin.Classes;

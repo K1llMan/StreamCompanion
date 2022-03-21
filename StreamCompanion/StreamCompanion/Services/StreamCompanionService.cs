@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 using CompanionPlugin.Classes;
 using CompanionPlugin.Classes.Models;
@@ -68,9 +69,7 @@ public class StreamCompanionService
         if (!File.Exists(settingsFilename))
             throw new FileNotFoundException(settingsFilename);
 
-        Settings = JsonSerializer.Deserialize<StreamCompanionSettings>(File.ReadAllText(settingsFilename), new JsonSerializerOptions {
-            PropertyNamingPolicy = JsonNamingPolicy.CamelCase
-        });
+        Settings = JsonSerializer.Deserialize<StreamCompanionSettings>(File.ReadAllText(settingsFilename), ServiceJsonSerializerSettings.GetSettings());
 
         Settings.Plugins = new PluginSettings {
             PluginPath = GetRelativePath(Settings.Plugins.PluginPath),
@@ -84,6 +83,19 @@ public class StreamCompanionService
     {
         // Форматтер для типа text/plain
         services.AddControllers(o => o.InputFormatters.Insert(o.InputFormatters.Count, new TextPlainInputFormatter()));
+        
+        // Опции по умолчанию для сериализатора
+        services.AddControllers().AddJsonOptions(options => {
+            JsonSerializerOptions serializerOptions = ServiceJsonSerializerSettings.GetSettings();
+
+            options.JsonSerializerOptions.PropertyNamingPolicy = serializerOptions.PropertyNamingPolicy;
+            options.JsonSerializerOptions.Converters.Clear();
+
+            foreach (JsonConverter converter in serializerOptions.Converters)
+            {
+                options.JsonSerializerOptions.Converters.Add(converter);
+            }
+        });
 
         services.AddSingleton(sp => new ServiceResolver(sp));
         services.AddSingleton<IStreamEventsService, StreamEventsService>();

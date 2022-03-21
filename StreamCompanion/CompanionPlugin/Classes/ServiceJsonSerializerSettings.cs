@@ -2,6 +2,9 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
+using Json.More;
+using Json.Schema;
+
 namespace CompanionPlugin.Classes;
 
 public class ServiceJsonSerializerSettings
@@ -10,6 +13,8 @@ public class ServiceJsonSerializerSettings
     {
         return new JsonSerializerOptions {
             Converters = {
+                // Сериализация типов в схемах
+                new EnumStringConverter<SchemaValueType>(),
                 new JsonStringEnumConverter()
             },
             Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,

@@ -33,8 +33,12 @@ public class ServiceSettings : IServiceSettings
 
     public ServiceSettings()
     {
+        SchemaGeneratorConfiguration config = new() {
+            PropertyNamingMethod = PropertyNamingMethods.CamelCase
+        };
+
         Schema = new JsonSchemaBuilder()
-            .FromType(GetType())
+            .FromType(GetType(), config)
             .Build();
     }
 

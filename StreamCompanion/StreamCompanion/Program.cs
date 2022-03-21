@@ -1,6 +1,3 @@
-using System.Text.Json;
-using System.Text.Json.Serialization;
-
 using CompanionPlugin.Services;
 
 using StreamCompanion.Classes;
@@ -33,19 +30,9 @@ public static class Program
 
     private static WebApplication BuildApp(WebApplicationBuilder builder)
     {
-        builder.Services.AddControllers()
-            .AddJsonOptions(options => {
-                options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-                options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
-            });
-
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
-
-        builder.Services.Configure<JsonSerializerOptions>(options => {
-            options.Converters.Add(new JsonStringEnumConverter(null, false));
-        });
 
         ConfigureLogging(builder);
         InitConfiguration(builder.Configuration);

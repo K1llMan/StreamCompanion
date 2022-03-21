@@ -1,7 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Diagnostics;
 
-using CompanionPlugin.Classes;
 using CompanionPlugin.Classes.Attributes;
 using CompanionPlugin.Classes.Models;
 using CompanionPlugin.Classes.Services;

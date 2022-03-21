@@ -14,7 +14,11 @@ namespace CompanionPlugin.Controllers;
 [Route("api/[controller]")]
 public class BaseServiceController<T> : Controller where T: class, IServiceSettings,  new()
 {
+    #region Поля
+
     protected IWritableOptions<T> config;
+
+    #endregion Поля
 
     public BaseServiceController(IWritableOptions<T> serviceConfig)
     {

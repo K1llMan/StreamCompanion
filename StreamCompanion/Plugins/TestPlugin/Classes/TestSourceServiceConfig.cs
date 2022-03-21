@@ -1,5 +1,4 @@
-﻿using CompanionPlugin.Classes;
-using CompanionPlugin.Classes.Models;
+﻿using CompanionPlugin.Classes.Models;
 using CompanionPlugin.Interfaces;
 
 using Json.Schema.Generation;
