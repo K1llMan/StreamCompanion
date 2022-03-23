@@ -1,4 +1,6 @@
-﻿using CompanionPlugin.Classes.Attributes;
+﻿using System.ComponentModel;
+
+using CompanionPlugin.Classes.Attributes;
 using CompanionPlugin.Classes.Models;
 using CompanionPlugin.Classes.Services;
 using CompanionPlugin.Enums;
@@ -17,10 +19,88 @@ public class InformerService : CommandService<InformerServiceConfig>
     #region Поля
 
     private IStreamEventsService events;
-
     private CancellationTokenSource cancellationTokenSource;
 
+    private CountInfo? counter;
+
     #endregion Поля
+
+    #region Команды
+
+    [BotCommand("!newCount")]
+    [Description("Создать новый счётчик")]
+    public BotResponseMessage NewCount(BotMessage message)
+    {
+        if (string.IsNullOrEmpty(message.Text))
+            return new BotResponseMessage {
+                Text = "Не задано имя счётчика",
+                Type = MessageType.Error
+            };
+
+        counter = new CountInfo {
+            Name = message.Text
+        };
+
+        return new BotResponseMessage {
+            Type = MessageType.Success
+        };
+    }
+
+    [BotCommand("!addCount")]
+    [Description("Добавить значение")]
+    public BotResponseMessage Count(BotMessage message)
+    {
+        if (counter == null)
+            return new BotResponseMessage {
+                Type = MessageType.Error
+            };
+
+        int.TryParse(message.Text, out int num);
+
+        if (num == 0)
+            num = 1;
+
+        counter.Count += num;
+
+        return new BotResponseMessage {
+            Text = $"{counter.Name}: {counter.Count}",
+            Type = MessageType.Success
+        };
+    }
+
+    [BotCommand("!resetCount")]
+    [Description("Сбросить счётчик")]
+    public BotResponseMessage ResetCount(BotMessage message)
+    {
+        if (counter == null)
+            return new BotResponseMessage {
+                Type = MessageType.Error
+            };
+
+        counter.Count = 0;
+
+        return new BotResponseMessage {
+            Text = $"{counter.Name}: {counter.Count}",
+            Type = MessageType.Success
+        };
+    }
+
+    [BotCommand("!count")]
+    [Description("Получить значение счётчика")]
+    public BotResponseMessage GetCount(BotMessage message)
+    {
+        if (counter == null)
+            return new BotResponseMessage {
+                Type = MessageType.Error
+            };
+
+        return new BotResponseMessage {
+            Text = $"{counter.Name}: {counter.Count}",
+            Type = MessageType.Success
+        };
+    }
+
+    #endregion Команды
 
     #region Вспомогательные функции
 

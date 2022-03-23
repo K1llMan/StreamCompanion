@@ -14,7 +14,7 @@ public class AudioPlayer
     private WaveOutEvent outputDevice = new();
     private WaveChannel32? stream;
     private LinkedList<SongInfo> queue = new();
-    private LinkedListNode<SongInfo> current;
+    private LinkedListNode<SongInfo>? current;
 
     #endregion Поля
 
@@ -22,7 +22,7 @@ public class AudioPlayer
 
     public AudioPlayerConfig Config { get; }
 
-    public SongInfo CurrengSong => current?.Value;
+    public SongInfo? CurrengSong => current?.Value;
 
     public List<ISongProvider> Providers { get; internal set; }
 

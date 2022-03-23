@@ -122,25 +122,17 @@ public class AudioPlayerService : CommandService<AudioPlayerServiceConfig>
     public BotResponseMessage What(BotMessage message)
     {
         if (player.CurrengSong == null)
-        {
-            eventListener.Publish(new TextStreamEvent {
-                Text = $"Песня отсутствует"
-            });
-
             return new BotResponseMessage {
+                Text = $"Песня отсутствует",
                 Type = MessageType.Error
             };
-        }
 
         string title = string.Join(" - ", new[] { player.CurrengSong.Artist, player.CurrengSong.Title }
             .Where(s => !string.IsNullOrEmpty(s))
         );
 
-        eventListener.Publish(new TextStreamEvent {
-            Text = $"Песня \"{title}\""
-        });
-
         return new BotResponseMessage {
+            Text = $"Песня \"{title}\"",
             Type = MessageType.Success
         };
     }

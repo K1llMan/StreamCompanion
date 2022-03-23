@@ -28,23 +28,11 @@ public class TwitchSourceService: CommandSourceService<TwitchSourceServiceConfig
 
     private IStreamEventsService eventListener;
     private ILogger<TwitchSourceService> log;
+    
     private TwitchClient client;
+    private TwitchAPI api;
 
     #endregion Поля
-
-    #region Свойства
-
-    /// <summary>
-    /// Конфигурация
-    /// </summary>
-    internal TwitchSourceServiceConfig Config => config.Value;
-
-    /// <summary>
-    /// API
-    /// </summary>
-    public TwitchAPI API { get; private set; }
-
-    #endregion Свойства
 
     #region Вспомогательные функции
 
@@ -91,7 +79,7 @@ public class TwitchSourceService: CommandSourceService<TwitchSourceServiceConfig
     private void ClientConnect()
     {
         // Token сгенерирован twitchtokengenerator
-        ConnectionCredentials credentials = new(Config.Login, Config.Token);
+        ConnectionCredentials credentials = new(config.Value.Login, config.Value.Token);
         ClientOptions clientOptions = new()
         {
             MessagesAllowedInPeriod = 750,
@@ -100,7 +88,7 @@ public class TwitchSourceService: CommandSourceService<TwitchSourceServiceConfig
 
         WebSocketClient customClient = new(clientOptions);
         client = new TwitchClient(customClient);
-        client.Initialize(credentials, Config.Channel);
+        client.Initialize(credentials, config.Value.Channel);
 
         //client.OnLog += Client_OnLog;
         client.OnConnected += Client_OnConnected;
@@ -121,9 +109,9 @@ public class TwitchSourceService: CommandSourceService<TwitchSourceServiceConfig
 
     private void APIConnect()
     {
-        API = new TwitchAPI(settings: new ApiSettings {
-            ClientId = Config.ClientId,
-            AccessToken = Config.Token
+        api = new TwitchAPI(settings: new ApiSettings {
+            ClientId = config.Value.ClientId,
+            AccessToken = config.Value.Token
         });
     }
 
@@ -145,7 +133,7 @@ public class TwitchSourceService: CommandSourceService<TwitchSourceServiceConfig
 
     public void Send(string message)
     {
-        client.SendMessage(Config.Channel, message);
+        client.SendMessage(config.Value.Channel, message);
     }
 
     public override void Init()
