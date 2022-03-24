@@ -9,10 +9,8 @@ public class DiscordSourceServiceConfig : ServiceSettings, ICommandSourceService
 {
     [Title("Токен бота")]
     public string Token { get; set; }
-    [Title("Имя сервера")]
-    public string GuildName { get; set; }
-    [Title("Имя канала")]
-    public string ChannelName { get; set; }
+    [Title("Id канала")]
+    public ulong ChannelId{ get; set; }
     [Title("Подписка на события")]
     public bool SubscribeToEvents { get; set; }
 
@@ -20,7 +18,6 @@ public class DiscordSourceServiceConfig : ServiceSettings, ICommandSourceService
     {
         return base.IsProperlyConfigured() && 
             !string.IsNullOrEmpty(Token) &&
-            !string.IsNullOrEmpty(GuildName) &&
-            !string.IsNullOrEmpty(ChannelName);
+            ChannelId != 0;
     }
 }

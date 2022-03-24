@@ -27,7 +27,7 @@ public class ServiceSettings : IServiceSettings
     /// </summary>
     public virtual bool IsProperlyConfigured()
     {
-        return !Enabled;
+        return Enabled;
     }
 
     /// <summary>

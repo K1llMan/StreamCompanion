@@ -28,7 +28,7 @@ public class DiscordSourceService : CommandSourceService<DiscordSourceServiceCon
     private ILogger<DiscordSourceService> log;
 
     private DiscordSocketClient? client;
-    private ISocketMessageChannel? channel;
+    private IMessageChannel? channel;
 
     #endregion Поля
 
@@ -55,17 +55,17 @@ public class DiscordSourceService : CommandSourceService<DiscordSourceServiceCon
 
     private async Task MessageReceived(SocketMessage messageParam)
     {
+        if (channel == null)
+            return;
+
         SocketUserMessage? message = messageParam as SocketUserMessage;
         if (message == null) 
             return;
 
         SocketCommandContext context = new(client, message);
         if (message.Author.IsBot 
-            || context.Guild.Name != config.Value.GuildName 
-            || context.Channel.Name != config.Value.ChannelName)
+            || context.Channel.Id != channel.Id)
             return;
-
-        channel ??= context.Channel;
 
         SocketGuildUser? user = context.Guild.GetUser(message.Author.Id);
 
@@ -100,6 +100,11 @@ public class DiscordSourceService : CommandSourceService<DiscordSourceServiceCon
             .GetResult();
 
         client.MessageReceived += MessageReceived;
+        client.Ready += async () =>
+        {
+            channel = client.GetChannel(config.Value.ChannelId) as IMessageChannel;
+            Send("Подключён.");
+        };
     }
 
     #endregion Вспомогательные функции
@@ -115,7 +120,7 @@ public class DiscordSourceService : CommandSourceService<DiscordSourceServiceCon
 
     public void Send(string message)
     {
-        channel?.SendMessageAsync(message);
+        channel?. SendMessageAsync(message);
     }
 
     public override void Init()

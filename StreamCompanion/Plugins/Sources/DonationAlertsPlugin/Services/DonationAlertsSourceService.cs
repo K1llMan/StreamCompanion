@@ -36,7 +36,7 @@ public class DonationAlertsSourceService : CommandSourceService<DonationAlertsCo
 
     public override void Init()
     {
-        if (config.Value.IsProperlyConfigured())
+        if (!config.Value.IsProperlyConfigured())
             return;
 
         client = new DonationAlertsClient(config.Value.ApiToken);
