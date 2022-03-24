@@ -22,6 +22,18 @@ public class ServiceSettings : IServiceSettings
 
     #region Основные функции
 
+    /// <summary>
+    /// Проверка заполненности необходимых полей
+    /// </summary>
+    public virtual bool IsProperlyConfigured()
+    {
+        return !Enabled;
+    }
+
+    /// <summary>
+    /// Валидация json с данными конфигурации
+    /// </summary>
+    /// <param name="data">Данные</param>
     public bool Validate(string data)
     {
         JsonDocument jsonData = JsonDocument.Parse(data);

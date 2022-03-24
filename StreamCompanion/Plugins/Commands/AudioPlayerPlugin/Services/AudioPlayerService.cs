@@ -28,7 +28,7 @@ public class AudioPlayerService : CommandService<AudioPlayerServiceConfig>
     private ILogger<AudioPlayerService> log;
 
     private string playerCachePath;
-    private AudioPlayer player;
+    private AudioPlayer? player;
 
     #endregion Поля
 
@@ -38,7 +38,7 @@ public class AudioPlayerService : CommandService<AudioPlayerServiceConfig>
     [Description("Добавить песню")]
     public BotResponseMessage Add(BotMessage message)
     {
-        player.AddFromProvider(message.Text);
+        player?.AddFromProvider(message.Text);
 
         return new BotResponseMessage {
             Type = MessageType.Success
@@ -49,7 +49,7 @@ public class AudioPlayerService : CommandService<AudioPlayerServiceConfig>
     [Description("Запустить проигрыватель")]
     public BotResponseMessage Play(BotMessage message)
     {
-        player.Play();
+        player?.Play();
 
         return new BotResponseMessage {
             Type = MessageType.Success
@@ -60,7 +60,7 @@ public class AudioPlayerService : CommandService<AudioPlayerServiceConfig>
     [Description("Поставить проигрыватель на паузу")]
     public BotResponseMessage Pause(BotMessage message)
     {
-        player.Pause();
+        player?.Pause();
 
         return new BotResponseMessage {
             Type = MessageType.Success
@@ -71,7 +71,7 @@ public class AudioPlayerService : CommandService<AudioPlayerServiceConfig>
     [Description("Остановить проигрыватель")]
     public BotResponseMessage Stop(BotMessage message)
     {
-        player.Stop();
+        player?.Stop();
 
         return new BotResponseMessage {
             Type = MessageType.Success
@@ -88,7 +88,7 @@ public class AudioPlayerService : CommandService<AudioPlayerServiceConfig>
                 Type = MessageType.Error
             };
 
-        player.Volume(volume);
+        player?.Volume(volume);
 
         return new BotResponseMessage {
             Type = MessageType.Success
@@ -99,7 +99,7 @@ public class AudioPlayerService : CommandService<AudioPlayerServiceConfig>
     [Description("Следующий трек")]
     public BotResponseMessage Next(BotMessage message)
     {
-        player.Next();
+        player?.Next();
 
         return new BotResponseMessage {
             Type = MessageType.Success
@@ -110,7 +110,7 @@ public class AudioPlayerService : CommandService<AudioPlayerServiceConfig>
     [Description("Предыдущий трек")]
     public BotResponseMessage Prev(BotMessage message)
     {
-        player.Previous();
+        player?.Previous();
 
         return new BotResponseMessage {
             Type = MessageType.Success
@@ -121,7 +121,7 @@ public class AudioPlayerService : CommandService<AudioPlayerServiceConfig>
     [Description("Информация о треке")]
     public BotResponseMessage What(BotMessage message)
     {
-        if (player.CurrengSong == null)
+        if (player?.CurrengSong == null)
             return new BotResponseMessage {
                 Text = $"Песня отсутствует",
                 Type = MessageType.Error
@@ -196,6 +196,9 @@ public class AudioPlayerService : CommandService<AudioPlayerServiceConfig>
 
     public override void Init()
     {
+        if (!config.Value.IsProperlyConfigured())
+            return;
+
         base.Init();
 
         playerCachePath = GetCorrectPaths(config.Value.CachePath);
@@ -214,9 +217,7 @@ public class AudioPlayerService : CommandService<AudioPlayerServiceConfig>
     public override void Dispose()
     {
         if (player != null)
-        {
             player.SongChanged -= SongChanged;
-        }
 
         base.Dispose();
     }

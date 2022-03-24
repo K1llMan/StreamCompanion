@@ -148,7 +148,7 @@ public class InformerService : CommandService<InformerServiceConfig>
 
     public override void Init()
     {
-        if (!config.Value.Enabled)
+        if (!config.Value.IsProperlyConfigured())
             return;
 
         base.Init();

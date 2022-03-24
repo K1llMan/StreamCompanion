@@ -29,19 +29,19 @@ public class TwitchSourceService: CommandSourceService<TwitchSourceServiceConfig
     private IStreamEventsService eventListener;
     private ILogger<TwitchSourceService> log;
     
-    private TwitchClient client;
+    private TwitchClient? client;
     private TwitchAPI api;
 
     #endregion Поля
 
     #region Вспомогательные функции
 
-    private void ClientOnJoinedChannel(object sender, OnJoinedChannelArgs args)
+    private void OnJoinedChannel(object? sender, OnJoinedChannelArgs args)
     {
         log.LogTrace($"{args.Channel}: {args.BotUsername}");
     }
 
-    private void Client_OnConnected(object sender, OnConnectedArgs args)
+    private void OnConnected(object? sender, OnConnectedArgs args)
     {
         log.LogTrace(args.BotUsername);
     }
@@ -56,7 +56,7 @@ public class TwitchSourceService: CommandSourceService<TwitchSourceServiceConfig
         return UserRole.User;
     }
 
-    private void OnMessageReceived(object sender, OnMessageReceivedArgs args)
+    private void OnMessageReceived(object? sender, OnMessageReceivedArgs args)
     {
         BotResponseMessage message = Received(new CommandReceivedArgs {
             Message = args.ChatMessage.Message,
@@ -91,8 +91,8 @@ public class TwitchSourceService: CommandSourceService<TwitchSourceServiceConfig
         client.Initialize(credentials, config.Value.Channel);
 
         //client.OnLog += Client_OnLog;
-        client.OnConnected += Client_OnConnected;
-        client.OnJoinedChannel += ClientOnJoinedChannel;
+        client.OnConnected += OnConnected;
+        client.OnJoinedChannel += OnJoinedChannel;
         client.OnMessageReceived += OnMessageReceived;
 
         /*
@@ -133,12 +133,12 @@ public class TwitchSourceService: CommandSourceService<TwitchSourceServiceConfig
 
     public void Send(string message)
     {
-        client.SendMessage(config.Value.Channel, message);
+        client?.SendMessage(config.Value.Channel, message);
     }
 
     public override void Init()
     {
-        if (string.IsNullOrEmpty(config.Value.Token))
+        if (!config.Value.IsProperlyConfigured())
             return;
 
         if (config.Value.SubscribeToEvents)

@@ -5,6 +5,7 @@ using CompanionPlugin.Enums;
 using CompanionPlugin.Interfaces;
 
 using Discord;
+using Discord.Commands;
 using Discord.WebSocket;
 
 using DiscordPlugin.Classes;
@@ -13,6 +14,8 @@ using Microsoft.Extensions.Logging;
 
 using StreamEvents.Events;
 using StreamEvents.Interfaces;
+
+using MessageType = CompanionPlugin.Enums.MessageType;
 
 namespace DiscordPlugin.Services;
 
@@ -23,32 +26,72 @@ public class DiscordSourceService : CommandSourceService<DiscordSourceServiceCon
 
     private IStreamEventsService eventListener;
     private ILogger<DiscordSourceService> log;
+
     private DiscordSocketClient? client;
+    private ISocketMessageChannel? channel;
 
     #endregion Поля
 
     #region Вспомогательные функции
-
-
-    private UserRole GetUserRole(object message)
-    {
-        /*
-        if (message.IsBroadcaster)
-            return UserRole.Administrator;
-        if (message.IsModerator)
-            return UserRole.Moderator;
-        */
-        return UserRole.User;
-    }
 
     private async Task ProcessBotResponse(TextStreamEvent textEvent)
     {
         Send(textEvent.Text);
     }
 
+    private UserRole GetUserRole(SocketGuildUser user)
+    {
+        if (user.GuildPermissions.Administrator)
+            return UserRole.Administrator;
+
+        if (user.GuildPermissions.ManageGuild)
+            return UserRole.Supermoderator;
+
+        if (user.GuildPermissions.ModerateMembers)
+            return UserRole.Moderator;
+
+        return UserRole.User;
+    }
+
+    private async Task MessageReceived(SocketMessage messageParam)
+    {
+        SocketUserMessage? message = messageParam as SocketUserMessage;
+        if (message == null) 
+            return;
+
+        SocketCommandContext context = new(client, message);
+        if (message.Author.IsBot 
+            || context.Guild.Name != config.Value.GuildName 
+            || context.Channel.Name != config.Value.ChannelName)
+            return;
+
+        channel ??= context.Channel;
+
+        SocketGuildUser? user = context.Guild.GetUser(message.Author.Id);
+
+        BotResponseMessage response = Received(new CommandReceivedArgs {
+            Message = message.Content,
+            User = user.Username,
+            Role = GetUserRole(user)
+        });
+
+        switch (response)
+        {
+            case { Type: MessageType.Error }:
+                Console.WriteLine(message.Content);
+                break;
+
+            case { Type: MessageType.Success } when !string.IsNullOrEmpty(response.Text):
+                Send(response.Text);
+                break;
+        };
+    }
+
     private void Connect()
     {
-        client.LoginAsync(TokenType.Bearer, config.Value.Token)
+        client = new DiscordSocketClient();
+
+        client.LoginAsync(TokenType.Bot, config.Value.Token)
             .GetAwaiter()
             .GetResult();
 
@@ -56,7 +99,7 @@ public class DiscordSourceService : CommandSourceService<DiscordSourceServiceCon
             .GetAwaiter()
             .GetResult();
 
-        
+        client.MessageReceived += MessageReceived;
     }
 
     #endregion Вспомогательные функции
@@ -72,12 +115,12 @@ public class DiscordSourceService : CommandSourceService<DiscordSourceServiceCon
 
     public void Send(string message)
     {
-        //client.SendMessage(Config.Channel, message);
+        channel?.SendMessageAsync(message);
     }
 
     public override void Init()
     {
-        if (string.IsNullOrEmpty(config.Value.Token))
+        if (!config.Value.IsProperlyConfigured())
             return;
 
         if (config.Value.SubscribeToEvents)
@@ -85,6 +128,7 @@ public class DiscordSourceService : CommandSourceService<DiscordSourceServiceCon
             eventListener.Subscribe<TextStreamEvent>(ProcessBotResponse);
         }
 
+        Connect();
     }
 
     public override void Dispose()
