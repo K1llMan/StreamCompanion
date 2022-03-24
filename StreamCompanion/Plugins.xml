@@ -8,7 +8,14 @@
   </ItemGroup>
 
   <PropertyGroup>
+    <ReferencePath>
+      $(OutputPath)
+      $(AssemblySearchPaths);
+      $(ReferencePath);
+    </ReferencePath>
     <EnableDynamicLoading>true</EnableDynamicLoading>
     <OutputPath>$(OutputPath)\plugins\$(MSBuildProjectName)</OutputPath>
+
   </PropertyGroup>
+
 </Project>
